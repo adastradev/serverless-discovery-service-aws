@@ -1,15 +1,12 @@
+# dev
+.vscode
+
 # package directories
 node_modules
+jspm_packages
 
 # Serverless directories
 .serverless
+
+# Webpack directories
 .webpack
-
-# Configuration for run-time
-config.js
-.vscode
-
-# System test config
-test/system/lib/outputs.json
-test/system/lib/config.js
-
