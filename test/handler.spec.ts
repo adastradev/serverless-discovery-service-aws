@@ -1,18 +1,20 @@
-import * as mocha from 'mocha';
+import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
 import * as chai from 'chai';
-import { APIGatewayEvent, Handler, Callback, Context } from 'aws-lambda';
+import * as mocha from 'mocha';
 import { hello } from '../source/handler';
 
 const expect = chai.expect;
 const should = chai.should();
 
-describe("handler", () => {
-  describe("hello", () => {
-    it("should return Serverless boilerplate message", () => {
-      hello(null, null, (error : Error, result : any) => {
+describe('handler', () => {
+  describe('hello', () => {
+    it('should return Serverless boilerplate message', () => {
+      hello(null, null, (error: Error, result: any) => {
+        // tslint:disable
         expect(error).to.be.null;
         result.body.should.equal('{"message":"Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!","input":null}');
-      })
+        // tslint:enable
+      });
     });
   });
 });
