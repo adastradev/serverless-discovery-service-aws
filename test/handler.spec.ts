@@ -1,7 +1,7 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
 import { APIGatewayEvent, Handler, Callback, Context } from 'aws-lambda';
-import { hello } from './handler';
+import { hello } from '../source/handler';
 
 const expect = chai.expect;
 const should = chai.should();

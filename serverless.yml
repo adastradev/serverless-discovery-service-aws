@@ -11,7 +11,7 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: source/handler.hello
     events:
       - http:
           method: get
