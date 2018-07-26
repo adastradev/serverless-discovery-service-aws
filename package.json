@@ -4,10 +4,12 @@
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "mocha -r ts-node/register test/integration/**/*.spec.ts",
     "lint": "tslint {source,test}/**/*.ts"
   },
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.2",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.2",
     "serverless": "^1.29.0",
     "source-map-support": "^0.5.0",
     "tslint": "^5.11.0"
