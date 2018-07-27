@@ -18,13 +18,13 @@ pipelines:
 
             # Run system/smoke tests against the staging environment
             - export STAGE_NAME=staging
-            - TABLE_PREFIX=test-system-tenants-
+            - TABLE_PREFIX=test-system-discovery-
             - . ./pipeline/deploy-service.sh
             - . ./pipeline/run-system-tests.sh
 
             # Configure/deploy service to prod stage if all system tests pass
             - STAGE_NAME=prod
-            - TABLE_PREFIX=service-tenants-
+            - TABLE_PREFIX=service-discovery-
             - . ./pipeline/deploy-service.sh
           services:
             - dynamodblocal
