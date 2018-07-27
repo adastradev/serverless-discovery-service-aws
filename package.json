@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha -r ts-node/register test/integration/**/*.spec.ts",
     "system-test": "mocha -r ts-node/register test/system/**/*.spec.ts",
-    "lint": "tslint {source,test}/**/*.ts"
+    "lint": "tslint {source,test}/**/*.ts",
+    "deploy": "./node_modules/.bin/serverless deploy"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.2",
