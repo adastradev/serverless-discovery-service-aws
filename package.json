@@ -32,6 +32,6 @@
     "typescript": "^2.8.1",
     "webpack": "^4.5.0"
   },
-  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "author": "Andrew Regier <aregier@regiernet.com>",
   "license": "MIT"
 }
