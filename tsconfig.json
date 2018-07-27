@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    // "strict": true,
+    // "noUnusedLocals": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es6",

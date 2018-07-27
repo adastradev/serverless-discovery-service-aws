@@ -1,10 +1,11 @@
 {
-  "name": "aws-nodejs-typescript",
+  "name": "aws-serverless-discovery-service",
   "version": "1.0.0",
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
     "test": "mocha -r ts-node/register test/integration/**/*.spec.ts",
+    "system-test": "mocha -r ts-node/register test/system/**/*.spec.ts",
     "lint": "tslint {source,test}/**/*.ts"
   },
   "dependencies": {
@@ -12,6 +13,7 @@
     "@aws/dynamodb-data-mapper-annotations": "^0.7.2",
     "aws-sdk": "^2.282.1",
     "serverless": "^1.29.0",
+    "serverless-stack-output": "^0.2.3",
     "source-map-support": "^0.5.0",
     "tslint": "^5.11.0"
   },
@@ -20,6 +22,7 @@
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
     "@types/node": "^8.0.57",
+    "aws-api-gateway-client": "^0.2.16",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "serverless-webpack": "^5.1.1",

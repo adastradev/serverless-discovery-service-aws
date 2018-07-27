@@ -1,0 +1,5 @@
+export const Config = {
+    aws_region: 'us-east-1',
+    dynamo_endpoint: 'DYNAMO_ENDPOINT',
+    table_prefix: 'TABLE_PREFIX'
+};

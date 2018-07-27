@@ -1,0 +1,52 @@
+# This is a sample build configuration for Other.
+# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+# image: atlassian/default-image:latest
+image: node:8.9.4
+
+pipelines:
+  branches:
+    master:
+      - step:
+          script:
+            # Run unit/integration tests
+            - npm install
+            - export TABLE_PREFIX=test-int-master-
+            - . ./pipeline/run-integration-tests.sh
+
+            # Run system/smoke tests against the staging environment
+            - export STAGE_NAME=staging
+            - TABLE_PREFIX=test-system-tenants-
+            - . ./pipeline/deploy-service.sh
+            - . ./pipeline/run-system-tests.sh
+
+            # Configure/deploy service to prod stage if all system tests pass
+            - STAGE_NAME=prod
+            - TABLE_PREFIX=service-tenants-
+            - . ./pipeline/deploy-service.sh
+          services:
+            - dynamodblocal
+    feature/*:
+      - step:
+          script:
+            - export BRANCH_SLUG=${BITBUCKET_BRANCH#feature/} && BRANCH_SLUG=${BRANCH_SLUG#KOB-} && BRANCH_SLUG=${BRANCH_SLUG//-/} && BRANCH_SLUG=feat${BRANCH_SLUG:0:8}
+
+            # Run unit/integration tests
+            - npm install
+            - export TABLE_PREFIX=test-int-${BRANCH_SLUG}-
+            - . ./pipeline/run-integration-tests.sh
+
+            # Run system/smoke tests against the feature-stage environment
+            - export STAGE_NAME=$BRANCH_SLUG
+            - TABLE_PREFIX=test-system-${BRANCH_SLUG}-
+            - . ./pipeline/deploy-service.sh
+            - . ./pipeline/run-system-tests.sh
+          services:
+            - dynamodblocal
+definitions: 
+  services: 
+    dynamodblocal: 
+      image: dwmkerr/dynamodb 
+

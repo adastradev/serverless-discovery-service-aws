@@ -8,5 +8,9 @@ jspm_packages
 # Serverless directories
 .serverless
 
+# Configuration for run-time
+config.ts
+outputs.json
+
 # Webpack directories
 .webpack

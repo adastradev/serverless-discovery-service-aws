@@ -4,10 +4,35 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-stack-output
 
 provider:
   name: aws
   runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+  timeout: 30
+
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:CreateTable
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+        - dynamodb:GetItem
+        - dynamodb:GetRecords
+        - dynamodb:ListTables
+        - dynamodb:PutItem
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:UpdateItem
+        - dynamodb:UpdateTable
+      Resource: [
+        "arn:aws:dynamodb:us-east-1:*:table/*-ServiceCatalog*",
+        "arn:aws:dynamodb:us-east-1:*:table/*-ServiceCatalog/*" # Global secondary indexes
+      ]
 
 functions:
   hello:
@@ -23,3 +48,7 @@ functions:
       - http:
           method: get
           path: catalog/service
+
+custom:
+  output:
+    file: test/system/lib/outputs.json # toml, yaml, yml, and json format is available
