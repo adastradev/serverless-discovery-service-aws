@@ -1,7 +1,8 @@
 import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
-import CatalogServiceModel from './model/CatalogServiceModel';
-import {DataMapper} from '@aws/dynamodb-data-mapper';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
+
+import CatalogServiceModel from './model/CatalogServiceModel';
 
 export const main: Handler = async (event: APIGatewayEvent, context: Context, cb: Callback) => {
 
@@ -12,12 +13,10 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, cb
   const client = new DynamoDB({region: 'us-east-1', endpoint: 'http://0.0.0.0:8000'});
   // TODO: DataMapper supports a tablename prefix to keep dev/prod separate
   const mapper = new DataMapper({client});
-  await mapper.ensureTableExists(CatalogServiceModel, {readCapacityUnits: 1, writeCapacityUnits: 1})
-  // const result = await mapper.put({item: service});
-  mapper.put(service).then(objectSaved => {
-    // the record has been saved
-    console.log('Created service: ' + objectSaved.id);
-  });
+  await mapper.ensureTableExists(CatalogServiceModel, {readCapacityUnits: 1, writeCapacityUnits: 1});
+
+  let newService = await mapper.put(service);
+  console.log('Created service: ' + newService.id);
 
   const response = {
     body: JSON.stringify({
