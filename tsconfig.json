@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "target": "es6",
     "lib": [
       "esnext"

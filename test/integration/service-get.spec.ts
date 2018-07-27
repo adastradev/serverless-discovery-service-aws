@@ -6,8 +6,8 @@ import { main } from '../../source/catalog/service-get';
 const expect = chai.expect;
 const should = chai.should();
 
-describe('handler', () => {
-  describe('hello', () => {
+describe('service-get', () => {
+  describe('service-get', () => {
     it('should return Serverless boilerplate message', () => {
       main(null, null, (error: Error, result: any) => {
         // tslint:disable
