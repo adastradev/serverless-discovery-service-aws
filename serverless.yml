@@ -42,6 +42,13 @@ functions:
           method: get
           path: hello
 
+  service-create:
+    handler: source/catalog/service-create.main
+    events:
+      - http:
+          method: post
+          path: catalog/service
+
   service-get:
     handler: source/catalog/service-get.main
     events:

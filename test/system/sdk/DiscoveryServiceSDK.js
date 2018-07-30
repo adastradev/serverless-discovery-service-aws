@@ -34,7 +34,7 @@ class DiscoveryServiceSDK {
             });
         }
         else {
-            throw(Error('Unsupported credential type in UserManagementApi'));
+            throw(Error('Unsupported credential type in DiscoveryServiceSDK'));
         }
     }
 
@@ -42,6 +42,16 @@ class DiscoveryServiceSDK {
         var params = {};
         var pathTemplate = '/catalog/service';
         var method = 'GET';
+        var additionalParams = {};
+        var body = { };
+
+        return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
+    }
+
+    createService() {
+        var params = {};
+        var pathTemplate = '/catalog/service';
+        var method = 'POST';
         var additionalParams = {};
         var body = { };
 

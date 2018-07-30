@@ -21,5 +21,10 @@ describe('service', () => {
       await sdk.getService();
       console.log('completed HTTP request');
     });
+
+    it('should return Serverless boilerplate message', async () => {
+      await sdk.createService();
+      console.log('completed HTTP request');
+    });
   });
 });
