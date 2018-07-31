@@ -35,13 +35,6 @@ provider:
       ]
 
 functions:
-  hello:
-    handler: source/handler.hello
-    events:
-      - http:
-          method: get
-          path: hello
-
   service-create:
     handler: source/catalog/service-create.main
     events:

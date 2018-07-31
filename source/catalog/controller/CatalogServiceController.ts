@@ -1,7 +1,7 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { CreateTableOptions, DataMapper } from '@aws/dynamodb-data-mapper';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Config } from '../../../config';
-import CatalogServiceModel from '../model/CatalogServiceModel';
+import { CatalogServiceModel, TableOptions} from '../model/CatalogServiceModel';
 import createErrorResponse from './createErrorResponse';
 
 export default class CatalogServiceController {
@@ -16,9 +16,9 @@ export default class CatalogServiceController {
 
     public async create(service: CatalogServiceModel) {
         try {
-            await this.mapper.ensureTableExists(CatalogServiceModel, {readCapacityUnits: 1, writeCapacityUnits: 1});
+            await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
             const newService = await this.mapper.put(service);
-            return createSuccessResponse(JSON.stringify(newService));
+            return createSuccessResponse(JSON.stringify(newService), 201);
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(err.statusCode, err.message);
@@ -28,7 +28,7 @@ export default class CatalogServiceController {
     public async delete(service: CatalogServiceModel) {
         try {
             await this.mapper.delete(service);
-            return createSuccessResponse({});
+            return createSuccessResponse('', 204);
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(err.statusCode, err.message);

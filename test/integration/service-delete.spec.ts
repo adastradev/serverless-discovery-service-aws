@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import { main as mainCreate } from '../../source/catalog/service-create';
 import { main as mainGet } from '../../source/catalog/service-get';
 import { main as mainDelete } from '../../source/catalog/service-delete';
-import CatalogServiceModel from '../../source/catalog/model/CatalogServiceModel';
+import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 import * as util from 'util';
 
 const createService = util.promisify(mainCreate);
@@ -32,6 +32,7 @@ describe('service-delete', () => {
     it('should return Success when deleting an extant service', async () => {
         const data = { pathParameters: { id: ServiceID }};
         const result = await deleteService(data, null);
+        expect(result.statusCode).to.be.equal(204);
 
         const getResult = await getService(data, null);
         expect(getResult.statusCode).to.be.equal(404);

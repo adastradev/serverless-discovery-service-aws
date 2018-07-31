@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import { main as mainCreate } from '../../source/catalog/service-create';
 import { main as mainGet } from '../../source/catalog/service-get';
 import { main as mainDelete } from '../../source/catalog/service-delete';
-import CatalogServiceModel from '../../source/catalog/model/CatalogServiceModel';
+import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 import * as util from 'util';
 
 const createService = util.promisify(mainCreate);

@@ -38,9 +38,9 @@ class DiscoveryServiceSDK {
         }
     }
 
-    getService() {
+    getService(id) {
         var params = {};
-        var pathTemplate = '/catalog/service';
+        var pathTemplate = '/catalog/service/' + id;
         var method = 'GET';
         var additionalParams = {};
         var body = { };
@@ -48,10 +48,20 @@ class DiscoveryServiceSDK {
         return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
     }
 
-    createService() {
+    createService(service) {
         var params = {};
         var pathTemplate = '/catalog/service';
         var method = 'POST';
+        var additionalParams = {};
+        var body = service;
+
+        return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
+    }
+
+    deleteService(id) {
+        var params = {};
+        var pathTemplate = '/catalog/service/' + id;
+        var method = 'DELETE';
         var additionalParams = {};
         var body = { };
 
