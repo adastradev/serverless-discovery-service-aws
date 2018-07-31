@@ -54,6 +54,20 @@ functions:
     events:
       - http:
           method: get
+          path: catalog/service/{id}
+
+  service-delete:
+    handler: source/catalog/service-delete.main
+    events:
+      - http:
+          method: delete
+          path: catalog/service/{id}
+
+  service-find:
+    handler: source/catalog/service-find.main
+    events:
+      - http:
+          method: get
           path: catalog/service
 
 custom:

@@ -7,7 +7,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
     try {
         const controller = new CatalogServiceController();
         const service = Object.assign(new CatalogServiceModel(), { ServiceID: event.pathParameters.id });
-        const response = await controller.get(service);
+        const response = await controller.delete(service);
         callback(null, response);
     } catch (Error) {
         console.log(Error.message);

@@ -14,7 +14,7 @@ const deleteService = util.promisify(mainDelete);
 const expect = chai.expect;
 const should = chai.should();
 
-describe('service-get', () => {
+describe('service-delete', () => {
     let ServiceID = null;
 
     before(async () => {
@@ -29,11 +29,11 @@ describe('service-get', () => {
         const result = await deleteService(data, null);
     });
 
-    it('should return Success for a new registration', async () => {
+    it('should return Success when deleting an extant service', async () => {
         const data = { pathParameters: { id: ServiceID }};
-        const result = await getService(data, null);
-        expect(result.statusCode).to.be.equal(200);
-        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
-        newService.ServiceName.should.be.equal('Discovery');
+        const result = await deleteService(data, null);
+
+        const getResult = await getService(data, null);
+        expect(getResult.statusCode).to.be.equal(404);
     });
 });

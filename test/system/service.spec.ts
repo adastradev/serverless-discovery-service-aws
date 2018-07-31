@@ -11,11 +11,11 @@ const should = chai.should();
 
 describe('service', () => {
   describe('service', () => {
-    let credentials = {
+    const credentials = {
       type: 'None'
-    }
-    var cloudformationOutput = require('./lib/outputs.json');
-    var sdk = new DiscoveryServiceSDK(cloudformationOutput.ServiceEndpoint, Config.aws_region, credentials);
+    };
+    const cloudformationOutput = require('./lib/outputs.json');
+    const sdk = new DiscoveryServiceSDK(cloudformationOutput.ServiceEndpoint, Config.aws_region, credentials);
 
     it('should return Serverless boilerplate message', async () => {
       await sdk.getService();

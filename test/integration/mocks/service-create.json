@@ -1,0 +1,5 @@
+{
+    "body": "{\"ServiceName\":\"Discovery\", \"StageName\": \"dev\", \"ServiceURL\": \"https://test\" }",
+    "requestContext": {
+    }
+}
