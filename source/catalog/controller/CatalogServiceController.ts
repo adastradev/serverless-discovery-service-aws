@@ -1,7 +1,7 @@
-import { CreateTableOptions, DataMapper } from '@aws/dynamodb-data-mapper';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Config } from '../../../config';
-import { CatalogServiceModel, TableOptions} from '../model/CatalogServiceModel';
+import { CatalogServiceModel, TableOptions } from '../model/CatalogServiceModel';
 import createErrorResponse from './createErrorResponse';
 
 export default class CatalogServiceController {
