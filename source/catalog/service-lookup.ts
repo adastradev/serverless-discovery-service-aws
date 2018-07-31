@@ -8,9 +8,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
             callback(null, createErrorResponse(400, 'Bad request'));
             return;
         }
-        console.log('Handler-create controller');
         const controller = new CatalogServiceController();
-        console.log('Handler-create controller.lookup');
         const response = await controller.lookup(event.queryStringParameters.ServiceName);
         callback(null, response);
     } catch (Error) {
