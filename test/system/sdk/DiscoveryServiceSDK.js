@@ -1,5 +1,6 @@
 // Example for IAM-authenticated API Gateway call
 var apigClientFactory = require('aws-api-gateway-client').default;
+var axios = require('axios');
 
 class DiscoveryServiceSDK {
 
@@ -43,7 +44,17 @@ class DiscoveryServiceSDK {
         var pathTemplate = '/catalog/service/' + id;
         var method = 'GET';
         var additionalParams = {};
-        var body = { };
+        var body = {};
+
+        return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
+    }
+
+    lookupService(ServiceName) {
+        var params = {};
+        var pathTemplate = '/catalog/service';
+        var method = 'GET';
+        var additionalParams = { queryParams: { ServiceName: ServiceName } };
+        var body = {};
 
         return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
     }
@@ -63,7 +74,7 @@ class DiscoveryServiceSDK {
         var pathTemplate = '/catalog/service/' + id;
         var method = 'DELETE';
         var additionalParams = {};
-        var body = { };
+        var body = {};
 
         return this.apigClient.invokeApi(params, pathTemplate, method, additionalParams, body);
     }

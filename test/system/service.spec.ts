@@ -18,25 +18,33 @@ describe('Catalog Service API', () => {
         const cloudformationOutput = require('./lib/outputs.json');
         const sdk = new DiscoveryServiceSDK(cloudformationOutput.ServiceEndpoint, Config.aws_region, credentials);
 
-        const service = { ServiceName: 'SystemTest', ServiceStage: 'dev', ServiceURL: 'https://systemtest' };
+        const service = { ServiceName: 'SystemTest', StageName: 'dev', ServiceURL: 'https://systemtest' };
         let newService;
 
         it('should create a service', async () => {
-            const createResponse = await sdk.createService(service);
-            expect(createResponse.status).to.equal(201);
-            newService = createResponse.data;
+            const response = await sdk.createService(service);
+            expect(response.status).to.equal(201);
+            newService = response.data;
         });
 
         it('should get a service by ID', async () => {
-            const getResponse = await sdk.getService(newService.ServiceID);
-            expect(getResponse.status).to.equal(200);
-            expect(getResponse.data.ServiceName).to.equal(service.ServiceName);
-            expect(getResponse.data.ServiceID).to.equal(newService.ServiceID);
+            const response = await sdk.getService(newService.ServiceID);
+            expect(response.status).to.equal(200);
+            expect(response.data.ServiceName).to.equal(service.ServiceName);
+            expect(response.data.ServiceID).to.equal(newService.ServiceID);
+        });
+
+        it('should get a service by Name', async () => {
+            const response = await sdk.lookupService('SystemTest');
+            expect(response.status).to.equal(200);
+            expect(response.data.length).to.equal(1);
+            expect(response.data[0].ServiceName).to.equal(service.ServiceName);
+            expect(response.data[0].ServiceID).to.equal(newService.ServiceID);
         });
 
         it('should delete the service', async () => {
-            const getResponse = await sdk.deleteService(newService.ServiceID);
-            expect(getResponse.status).to.equal(204);
+            const response = await sdk.deleteService(newService.ServiceID);
+            expect(response.status).to.equal(204);
         });
     });
 });

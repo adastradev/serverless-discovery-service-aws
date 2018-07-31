@@ -56,12 +56,15 @@ functions:
           method: delete
           path: catalog/service/{id}
 
-  service-find:
-    handler: source/catalog/service-find.main
+  service-lookup:
+    handler: source/catalog/service-lookup.main
     events:
       - http:
           method: get
           path: catalog/service
+          request:
+            parameters:
+              ServiceName: true
 
 custom:
   output:

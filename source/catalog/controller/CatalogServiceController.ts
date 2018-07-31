@@ -44,6 +44,23 @@ export default class CatalogServiceController {
             return createErrorResponse(404, err.message);
         }
     }
+
+    public async lookup(ServiceName) {
+        try {
+            const matches = [];
+            console.log('Controller.lookup');
+            for await (const item of this.mapper.query(CatalogServiceModel,
+                { ServiceName },
+                { indexName: 'ServiceNameIndex' })) {
+                matches.push(item);
+            }
+            console.log('Controller.lookup-createSuccessResponse');
+            return createSuccessResponse(JSON.stringify(matches));
+        } catch (err) {
+            console.log(err.message);
+            return createErrorResponse(404, err.message);
+        }
+    }
 }
 
 const createSuccessResponse = (message, statusCode = 200) => {
