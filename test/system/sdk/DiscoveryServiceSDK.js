@@ -1,6 +1,5 @@
 // Example for IAM-authenticated API Gateway call
 var apigClientFactory = require('aws-api-gateway-client').default;
-var axios = require('axios');
 
 class DiscoveryServiceSDK {
 

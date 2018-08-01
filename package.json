@@ -1,5 +1,5 @@
 {
-  "name": "aws-serverless-discovery-service",
+  "name": "@adastradev/serverless-discovery-service-aws",
   "version": "1.0.0",
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
@@ -33,6 +33,9 @@
     "typescript": "^2.8.1",
     "webpack": "^4.5.0"
   },
-  "author": "Andrew Regier <aregier@regiernet.com>",
+  "author": "Ad Astra",
+  "contributors": [
+    "Andrew Regier <aregier@regiernet.com>"
+  ],
   "license": "MIT"
 }
