@@ -1,24 +1,20 @@
 import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
 import * as chai from 'chai';
-import * as mocha from 'mocha';
-import { main } from '../../source/catalog/service-get';
-import * as AWS from 'aws-sdk';
-import * as DiscoveryServiceSDK from './sdk/DiscoveryServiceSDK';
+import { DiscoveryServiceApi, ServiceApiModel } from '@adastradev/serverless-discovery-sdk-js/dist/index';
 import { Config } from '../../config';
 
 const expect = chai.expect;
-const should = chai.should();
 
 describe('Catalog Service API', () => {
     describe('Basic API operations', () => {
-        const credentials = {
-            type: 'None'
-        };
-
         const cloudformationOutput = require('./lib/outputs.json');
-        const sdk = new DiscoveryServiceSDK(cloudformationOutput.ServiceEndpoint, Config.aws_region, credentials);
+        const sdk = new DiscoveryServiceApi(cloudformationOutput.ServiceEndpoint, Config.aws_region, { type: 'None' });
 
-        const service = { ServiceName: 'SystemTest', StageName: 'dev', ServiceURL: 'https://systemtest' };
+        const service: ServiceApiModel = {
+            ServiceName: 'SystemTest',
+            ServiceURL: 'https://systemtest',
+            StageName: 'dev'
+        };
         let newService;
 
         it('should create a service', async () => {
