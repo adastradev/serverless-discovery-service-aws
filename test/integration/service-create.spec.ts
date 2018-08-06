@@ -20,12 +20,24 @@ describe('service-create', () => {
         const result = await deleteService(data, null);
     });
 
-    it('should return Success for a new registration', async () => {
+    it('should return Success (created) for a new registration', async () => {
         const data = require('./mocks/service-create');
         const result = await createService(data, null);
-        expect(result.statusCode).to.be.equal(201);
+        expect(result.statusCode).to.be.equal(201); // Created
         const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
         ServiceID = newService.ServiceID;
         newService.ServiceName.should.be.equal('Discovery');
+    });
+
+    it('should return Success (updated) for an existing registration', async () => {
+        const event = require('./mocks/service-create');
+        const devData = { ServiceName: 'Discovery', StageName: 'dev', ServiceURL: 'https://newServiceLocation' };
+        event.body = JSON.stringify(devData);
+        const result = await createService(event, null);
+        expect(result.statusCode).to.be.equal(200); // Ok
+        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
+        ServiceID = newService.ServiceID;
+        newService.ServiceName.should.be.equal('Discovery');
+        newService.ServiceURL.should.be.equal('https://newServiceLocation');
     });
 });

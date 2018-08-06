@@ -40,6 +40,14 @@ describe('Catalog Service API', () => {
             expect(response.data[0].ServiceID).to.equal(newService.ServiceID);
         });
 
+        it('should get a service by Name and Stage', async () => {
+            const response = await discoveryApi.lookupService('SystemTest', 'dev');
+            expect(response.status).to.equal(200);
+            expect(response.data.length).to.equal(1);
+            expect(response.data[0].ServiceName).to.equal(service.ServiceName);
+            expect(response.data[0].ServiceID).to.equal(newService.ServiceID);
+        });
+
         it('should delete the service', async () => {
             const response = await discoveryApi.deleteService(newService.ServiceID);
             expect(response.status).to.equal(204);

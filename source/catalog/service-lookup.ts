@@ -9,7 +9,8 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
             return;
         }
         const controller = new CatalogServiceController();
-        const response = await controller.lookup(event.queryStringParameters.ServiceName);
+        const response = await controller.lookup(event.queryStringParameters.ServiceName,
+            event.queryStringParameters.StageName || undefined);
         callback(null, response);
     } catch (Error) {
         console.log(Error.message);
