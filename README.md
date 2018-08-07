@@ -2,7 +2,7 @@
 
 *The last serverless micro-service you'll ever wonder how to find*
 
-The AWS Serverless Discovery Service [serverless](serverless.com) micro-service written using Typescript and DynamoDB that assists with service-discovery in a serverless world. It supports both server (service-to-service) and client-side discovery use cases.
+A Serverless Discovery Service [serverless](serverless.com) micro-service written for AWS using Typescript and DynamoDB that assists with service-discovery in a serverless world. It supports both server (service-to-service) and client-side discovery use cases.
 
 ## Usage
 See the [serverless-discovery-sdk](https://github.com/adastradev/serverless-discovery-sdk-js.git) project for details on how to start discovering services from other projects; This SDK is planned to be made available in several language bindings.

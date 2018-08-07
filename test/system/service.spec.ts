@@ -1,6 +1,6 @@
 import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
 import * as chai from 'chai';
-import { DiscoveryServiceApi, ServiceApiModel } from '@adastradev/serverless-discovery-sdk-js';
+import { DiscoveryServiceApi, ServiceApiModel } from '@adastradev/serverless-discovery-sdk';
 import { Config } from '../../config';
 
 const expect = chai.expect;
