@@ -57,4 +57,17 @@ describe('service-lookup', () => {
         prodService.StageName.should.be.equal('prod');
         prodService.ServiceID.should.be.equal(ServiceIDProd);
     });
+
+    it('should return Success and a single result when looking up a service by name and stage', async () => {
+        const data = { queryStringParameters: { ServiceName: 'Discovery', StageName: 'prod' }};
+        const result = await lookupService(data, null);
+        expect(result.statusCode).to.be.equal(200);
+        const servicesJSON = JSON.parse(result.body);
+        expect(servicesJSON.length).to.be.equal(1);
+
+        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+        prodService.ServiceName.should.be.equal('Discovery');
+        prodService.StageName.should.be.equal('prod');
+        prodService.ServiceID.should.be.equal(ServiceIDProd);
+    });
 });

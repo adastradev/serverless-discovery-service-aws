@@ -65,6 +65,7 @@ functions:
           request:
             parameters:
               ServiceName: true
+              StageName: false
 
 custom:
   output:

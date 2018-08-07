@@ -17,8 +17,23 @@ export default class CatalogServiceController {
     public async create(service: CatalogServiceModel) {
         try {
             await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
-            const newService = await this.mapper.put(service);
-            return createSuccessResponse(JSON.stringify(newService), 201);
+
+            // Look for existing services with the same name and stage
+            const keyCondition = { ServiceName: service.ServiceName, StageName: service.StageName };
+            const queryIterator = await this.mapper.query(CatalogServiceModel,
+                keyCondition,
+                { indexName: 'ServiceNameIndex' });
+            const existingService = await queryIterator.next();
+
+            if (existingService.value !== undefined) {
+                // TODO: should we consider making this an error condition instead?
+                existingService.value.ServiceURL = service.ServiceURL;
+                const updatedService = await this.mapper.update(existingService.value);
+                return createSuccessResponse(JSON.stringify(updatedService), 200);
+            } else {
+                const newService = await this.mapper.put(service);
+                return createSuccessResponse(JSON.stringify(newService), 201);
+            }
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(err.statusCode, err.message);
@@ -45,11 +60,12 @@ export default class CatalogServiceController {
         }
     }
 
-    public async lookup(ServiceName) {
+    public async lookup(ServiceName, StageName = '') {
         try {
             const matches = [];
+            const keyCondition = StageName.length === 0 ? { ServiceName } : { ServiceName, StageName };
             for await (const item of this.mapper.query(CatalogServiceModel,
-                { ServiceName },
+                keyCondition,
                 { indexName: 'ServiceNameIndex' })) {
                 matches.push(item);
             }
