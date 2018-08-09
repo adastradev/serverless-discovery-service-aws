@@ -52,6 +52,10 @@ functions:
       - http:
           method: post
           path: catalog/service
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-get:
     handler: source/catalog/service-get.main
@@ -59,6 +63,10 @@ functions:
       - http:
           method: get
           path: catalog/service/{id}
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-delete:
     handler: source/catalog/service-delete.main
@@ -66,6 +74,10 @@ functions:
       - http:
           method: delete
           path: catalog/service/{id}
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-lookup:
     handler: source/catalog/service-lookup.main
@@ -73,6 +85,9 @@ functions:
       - http:
           method: get
           path: catalog/service
+          cors:
+            origin: "*"
+            allowCredentials: false
           request:
             parameters:
               ServiceName: true

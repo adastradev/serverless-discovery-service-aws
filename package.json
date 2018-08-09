@@ -19,7 +19,7 @@
     "aws-sdk": "^2.282.1"
   },
   "devDependencies": {
-    "@adastradev/serverless-discovery-sdk": "0.0.4",
+    "@adastradev/serverless-discovery-sdk": "0.0.7",
     "@types/aws-lambda": "8.10.1",
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",

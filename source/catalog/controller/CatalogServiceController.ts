@@ -100,6 +100,10 @@ export default class CatalogServiceController {
 const createSuccessResponse = (message, statusCode = 200) => {
     return {
         body: message,
+        headers: {
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Origin': '*'
+        },
         statusCode
     };
 };
