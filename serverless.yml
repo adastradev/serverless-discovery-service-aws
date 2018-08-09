@@ -4,7 +4,7 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-  - serverless-stack-output
+  - serverless-discovery-plugin
 
 provider:
   name: aws
@@ -20,6 +20,7 @@ provider:
       Action:
         - dynamodb:CreateTable
         - dynamodb:DeleteItem
+        - dynamodb:DeleteTable
         - dynamodb:DescribeTable
         - dynamodb:GetItem
         - dynamodb:GetRecords
@@ -35,12 +36,26 @@ provider:
       ]
 
 functions:
+  db-provision:
+    handler: source/provision.main
+    timeout: 60
+    # For pipeline use only; Not exposed via API Gateway
+
+  db-deprovision:
+    handler: source/deprovision.main
+    timeout: 60
+    # For pipeline use only; Not exposed via API Gateway
+
   service-create:
     handler: source/catalog/service-create.main
     events:
       - http:
           method: post
           path: catalog/service
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-get:
     handler: source/catalog/service-get.main
@@ -48,6 +63,10 @@ functions:
       - http:
           method: get
           path: catalog/service/{id}
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-delete:
     handler: source/catalog/service-delete.main
@@ -55,6 +74,10 @@ functions:
       - http:
           method: delete
           path: catalog/service/{id}
+          cors:
+            origin: "*"
+            allowCredentials: true
+          authorizer: aws_iam
 
   service-lookup:
     handler: source/catalog/service-lookup.main
@@ -62,11 +85,16 @@ functions:
       - http:
           method: get
           path: catalog/service
+          cors:
+            origin: "*"
+            allowCredentials: false
           request:
             parameters:
               ServiceName: true
               StageName: false
 
 custom:
-  output:
-    file: test/system/lib/outputs.json # toml, yaml, yml, and json format is available
+  discovery:
+    file: test/system/lib/outputs.json
+    deployHandler: pipeline/serverless-db-provision.deploy
+    removeHandler: pipeline/serverless-db-provision.remove

@@ -14,6 +14,26 @@ export default class CatalogServiceController {
         });
     }
 
+    public async provisionTables() {
+        try {
+            await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
+            return createSuccessResponse('Tables provisioned successfully', 200);
+        } catch (err) {
+            console.log(err.message);
+            return createErrorResponse(err.statusCode, err.message);
+        }
+    }
+
+    public async deprovisionTables() {
+        try {
+            await this.mapper.deleteTable(CatalogServiceModel);
+            return createSuccessResponse('Tables de-provisioned successfully', 200);
+        } catch (err) {
+            console.log(err.message);
+            return createErrorResponse(err.statusCode, err.message);
+        }
+    }
+
     public async create(service: CatalogServiceModel) {
         try {
             await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
@@ -80,6 +100,10 @@ export default class CatalogServiceController {
 const createSuccessResponse = (message, statusCode = 200) => {
     return {
         body: message,
+        headers: {
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Origin': '*'
+        },
         statusCode
     };
 };
