@@ -23,7 +23,7 @@ describe('Catalog Service API', () => {
             const response = await discoveryApi.createService(service);
             expect(response.status).to.equal(201);
             newService = response.data;
-        });
+        }).timeout(60000);
 
         it('should get a service by ID', async () => {
             const response = await discoveryApi.getService(newService.ServiceID);
