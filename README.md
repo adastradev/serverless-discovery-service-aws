@@ -12,6 +12,8 @@ This project uses a Continuous Deployment pipeline to deploy directly into an AW
 * AWS_ACCESS_KEY_ID
 * AWS_REGION
 * AWS_SECRET_ACCESS_KEY
+* AWS_ACCESS_KEY_ID_PROD
+* AWS_SECRET_ACCESS_KEY_PROD
 
 ## Getting Started - Development / Contributors
 Contributions are welcome, as serverless is a new and evolving space. Please let us know if this is valuable to you and feel free to suggest improvements either via issues or pull requests.
