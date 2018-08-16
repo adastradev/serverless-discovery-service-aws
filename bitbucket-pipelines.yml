@@ -11,6 +11,10 @@ pipelines:
     master:
       - step:
           script:
+            # Override with production AWS credentials for the master branch
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
+
             # Run unit/integration tests
             - npm install
             - npm run lint
