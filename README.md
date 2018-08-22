@@ -1,5 +1,7 @@
 # serverless-discovery-service-aws
 
+[![GitHub license](https://img.shields.io/github/license/adastradev/serverless-discovery-service-aws.svg)](https://github.com/adastradev/serverless-discovery-service-aws/blob/master/LICENSE.md)
+
 *The last serverless micro-service you'll ever wonder how to find*
 
 A Serverless Discovery Service [serverless](serverless.com) micro-service written for AWS using Typescript and DynamoDB that assists with service-discovery in a serverless world. It supports both server (service-to-service) and client-side discovery use cases.
