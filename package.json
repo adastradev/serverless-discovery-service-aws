@@ -4,7 +4,7 @@
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
-    "test": "nyc mocha test/integration/**/*.spec.ts",
+    "test": "nyc --require ts-node/register mocha test/integration/**/*.spec.ts",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "system-test": "mocha -r ts-node/register test/system/**/*.spec.ts",
     "lint": "tslint {source,test}/**/*.ts",
@@ -27,6 +27,7 @@
       "html",
       "text"
     ],
+    "sourceMap": true,
     "all": true
   },
   "repository": {
