@@ -18,7 +18,7 @@
     "exclude": [
       "**/*.d.ts",
       "coverage/**",
-      "test/system/**",
+      "test/**",
       "webpack.config.js",
       "source-map-install.js"
     ],
