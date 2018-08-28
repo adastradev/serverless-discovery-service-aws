@@ -5,12 +5,13 @@
 node_modules
 jspm_packages
 
-# Serverless directories
+# Built output
 .serverless
+.nyc_output
+coverage
+.webpack
 
 # Configuration for run-time
 config.ts
 outputs.json
 
-# Webpack directories
-.webpack
