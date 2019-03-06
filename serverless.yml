@@ -10,8 +10,10 @@ provider:
   runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   stackName: service-discovery-${self:provider.stage}
-  stackTags:
-    repository: serverless-discovery-service-aws
+  tags:
+    Repository: serverless-discovery-service-aws
+    'Stack Name': ${self:provider.stackName}
+  stackTags: ${self:provider.tags}
   region: us-east-1
   memorySize: 128
   timeout: 30
