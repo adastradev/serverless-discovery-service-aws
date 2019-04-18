@@ -12,7 +12,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
         let response;
         if (event.queryStringParameters.Version || event.queryStringParameters.ExternalId) {
             response = await controller.lookupByVersion(event.queryStringParameters.ServiceName,
-                event.queryStringParameters.Version || undefined, 
+                event.queryStringParameters.Version || undefined,
                 event.queryStringParameters.ExternalId || undefined);
         } else {
             response = await controller.lookupByStage(event.queryStringParameters.ServiceName,
