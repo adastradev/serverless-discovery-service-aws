@@ -80,7 +80,7 @@ export default class CatalogServiceController {
         }
     }
 
-    public async lookup(ServiceName, StageName = '') {
+    public async lookupByStage(ServiceName, StageName = '') {
         try {
             const matches = [];
             const keyCondition = StageName.length === 0 ? { ServiceName } : { ServiceName, StageName };
@@ -95,6 +95,38 @@ export default class CatalogServiceController {
             return createErrorResponse(404, err.message);
         }
     }
+
+    public async lookupByVersion(ServiceName, Version, ExternalId) {
+        try {
+            const matches = [];
+            const keyCondition = { ServiceName };
+            for await (const item of this.mapper.query(CatalogServiceModel,
+                keyCondition,
+                { indexName: 'ServiceNameIndex' })) {
+
+                    // TODO: do version check here to see id this item should be returned...
+                    /*
+                    if (Version) {
+
+                    }
+                    */
+
+                    // TODO: do an external Id (tenant-id) check here to see if this item should be returned...
+                    /*
+                    if (ExternalId) {
+
+                    }
+                    */
+
+                    matches.push(item);
+            }
+            return createSuccessResponse(JSON.stringify(matches));
+        } catch (err) {
+            console.log(err.message);
+            return createErrorResponse(404, err.message);
+        }
+    }
+
 }
 
 const createSuccessResponse = (message, statusCode = 200) => {

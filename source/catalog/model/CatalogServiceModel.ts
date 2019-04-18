@@ -29,6 +29,12 @@ export class CatalogServiceModel {
 
     @attribute()
     public ServiceURL: string;
+
+    @attribute()
+    public ExternalID: string;
+
+    @attribute()
+    public Version: string;
 }
 
 export function TableOptions() {

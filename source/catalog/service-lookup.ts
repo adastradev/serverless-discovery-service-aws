@@ -9,8 +9,15 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
             return;
         }
         const controller = new CatalogServiceController();
-        const response = await controller.lookup(event.queryStringParameters.ServiceName,
-            event.queryStringParameters.StageName || undefined);
+        let response;
+        if (event.queryStringParameters.Version || event.queryStringParameters.ExternalId) {
+            response = await controller.lookupByVersion(event.queryStringParameters.ServiceName,
+                event.queryStringParameters.Version || undefined, 
+                event.queryStringParameters.ExternalId || undefined);
+        } else {
+            response = await controller.lookupByStage(event.queryStringParameters.ServiceName,
+                event.queryStringParameters.StageName || undefined);
+            }
         callback(null, response);
     } catch (Error) {
         console.log(Error.message);
