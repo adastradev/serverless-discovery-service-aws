@@ -38,17 +38,41 @@ export default class CatalogServiceController {
         try {
             await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
 
-            // Look for existing services with the same name and stage
-            const keyCondition = { ServiceName: service.ServiceName, StageName: service.StageName };
-            const queryIterator = await this.mapper.query(CatalogServiceModel,
-                keyCondition,
-                { indexName: 'ServiceNameIndex' });
-            const existingService = await queryIterator.next();
+            let existingService;
 
-            if (existingService.value !== undefined) {
+            // If external Id is passed, find matching row assuming version specific logic is desired.
+            if (service.ExternalID) {
+                const keyCondition = { ServiceName: service.ServiceName, StageName: 'version-specific' };
+                for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
+                    { indexName: 'ServiceNameIndex' })) {
+
+                    let isMatch = false;
+                    if (service.ExternalID) {
+                        isMatch = service.ExternalID === item.ExternalID;
+                    }
+                    if (isMatch) {
+                        existingService = item;
+                        break;
+                    }
+                    isMatch = false;
+                }
+            } else if (service.ServiceName && service.StageName) {
+                // Look for existing services with the same name and stage
+                const keyCondition = { ServiceName: service.ServiceName, StageName: service.StageName };
+                const queryIterator = await this.mapper.query(CatalogServiceModel,
+                        keyCondition,
+                        { indexName: 'ServiceNameIndex' });
+                const queryResult = await queryIterator.next();
+                if (queryResult) {
+                    existingService = queryResult.value;
+                }
+            }
+
+            if (existingService) {
                 // TODO: should we consider making this an error condition instead?
-                existingService.value.ServiceURL = service.ServiceURL;
-                const updatedService = await this.mapper.update(existingService.value);
+                existingService.ServiceURL = service.ServiceURL;
+                existingService.Version = service.Version;
+                const updatedService = await this.mapper.update(existingService);
                 return createSuccessResponse(JSON.stringify(updatedService), 200);
             } else {
                 const newService = await this.mapper.put(service);

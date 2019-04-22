@@ -40,4 +40,35 @@ describe('service-create', () => {
         newService.ServiceName.should.be.equal('Discovery');
         newService.ServiceURL.should.be.equal('https://newServiceLocation');
     });
+
+    it('should return Success (created) for a new registration with External ID and Version', async () => {
+        const data = require('./mocks/service-create-external-id');
+        const result = await createService(data, null);
+        expect(result.statusCode).to.be.equal(201); // Created
+        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
+        ServiceID = newService.ServiceID;
+        newService.ServiceName.should.be.equal('Discovery');
+        newService.ExternalID.should.be.equal('95a575de-9afe-4ef9-93e9-d17654ef149f');
+        newService.Version.should.be.equal('1.5.4.9');
+    });
+
+    it('should return Success (updated) for an existing registration with External ID', async () => {
+        const event = require('./mocks/service-create-external-id');
+        const devData = {
+            ExternalID: '95a575de-9afe-4ef9-93e9-d17654ef149f',
+            ServiceName: 'Discovery',
+            ServiceURL: 'https://newServiceLocation',
+            StageName: 'version-specific',
+            Version: 'new-version'
+        };
+        event.body = JSON.stringify(devData);
+        const result = await createService(event, null);
+        expect(result.statusCode).to.be.equal(200); // Ok
+        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
+        ServiceID = newService.ServiceID;
+        newService.ServiceName.should.be.equal('Discovery');
+        newService.ServiceURL.should.be.equal('https://newServiceLocation');
+        newService.Version.should.be.equal('new-version');
+    });
+
 });
