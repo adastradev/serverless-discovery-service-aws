@@ -3,6 +3,8 @@ import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Config } from '../../../config';
 import { CatalogServiceModel, TableOptions } from '../model/CatalogServiceModel';
 import createErrorResponse from './createErrorResponse';
+import * as semver from 'semver';
+import {Stage} from 'aws-sdk/clients/apigateway';
 
 export default class CatalogServiceController {
     private mapper: DataMapper;
@@ -124,33 +126,88 @@ export default class CatalogServiceController {
         }
     }
 
-    public async lookupByVersion(ServiceName, Version, ExternalId, StageName) {
+    public async oldLookupByVersion(ServiceName, Version, ExternalId, StageName) {
         try {
             const matches = [];
-            const keyCondition = { ServiceName };
+            const keyCondition = {ServiceName};
             for await (const item of this.mapper.query(CatalogServiceModel,
                 keyCondition,
-                { indexName: 'ServiceNameIndex' })) {
+                {indexName: 'ServiceNameIndex'})) {
 
-                    let isMatch = false;
+                let isMatch = false;
 
-                    // Do an external Id (tenant-id) check here to see if this item should be returned.
-                    if (ExternalId && item.ExternalID === ExternalId) {
-                        isMatch = true;
+                // Do an external Id (tenant-id) check here to see if this item should be returned.
+                if (ExternalId && item.ExternalID === ExternalId) {
+                    isMatch = true;
                     // Do version check here to see id this item should be returned.
-                    } else if (Version && item.Version === Version  && !item.ExternalID) {
-                        isMatch = true;
+                } else if (Version && item.Version === Version && !item.ExternalID) {
+                    isMatch = true;
                     // Do stage check here to see id this item should be returned.
-                    } else if (StageName && item.StageName === StageName  && !item.ExternalID) {
-                        isMatch = true;
-                    }
+                } else if (StageName && item.StageName === StageName && !item.ExternalID) {
+                    isMatch = true;
+                }
 
-                    if (isMatch) {
-                        matches.push(item);
-                    }
-                    isMatch = false;
+                if (isMatch) {
+                    matches.push(item);
+                }
+                isMatch = false;
             }
-            return createSuccessResponse(JSON.stringify(matches));
+        } catch (err) {
+            console.log(err.message);
+            return createErrorResponse(404, err.message);
+        }
+    }
+
+    public filterVersion(Version: string, ExternalId: string, StageName: string, candidates: CatalogServiceModel[]) {
+        if (candidates.length < 1) {
+            throw new Error('No service candidates provided');
+        }
+
+        let externalIdFound = false;
+        let stageOverrideFound = false;
+        let chosenItem: CatalogServiceModel;
+
+        for (const item of candidates) {
+            // if (ExternalId && ExternalId === item.ExternalID) {
+            //     externalIdFound = true;
+            // }
+            if (ExternalId) {
+                externalIdFound = ExternalId === item.ExternalID;
+            }
+            if (StageName) {
+                stageOverrideFound = StageName === item.StageName;
+            }
+            if (Version) {
+
+            }
+
+
+        }
+
+        if (chosenItem === undefined) {
+            throw new Error('Failed to find an appropriate service for provided requirements');
+        }
+
+        return chosenItem;
+    }
+
+    public async lookupByVersion(ServiceName: string, Version: string, ExternalId: string, StageName: string) {
+        try {
+            const candidates: CatalogServiceModel[] = [];
+            const keyCondition = { ServiceName };
+            for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
+                { indexName: 'ServiceNameIndex' })) {
+                candidates.push(item);
+            }
+
+            const matches = [this.filterVersion(Version, ExternalId, StageName, candidates)];
+            if (matches.length > 0) {
+                return createSuccessResponse(JSON.stringify(matches));
+            } else {
+                const errMessage = 'Failed to find an appropriate service';
+                console.log(errMessage);
+                return createErrorResponse(404, 'Failed to find an appropriate service');
+            }
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(404, err.message);

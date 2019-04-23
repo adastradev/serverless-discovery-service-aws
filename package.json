@@ -17,7 +17,9 @@
       ".ts",
       ".tsx"
     ],
-    "include": ["source/**"],
+    "include": [
+      "source/**"
+    ],
     "reporter": [
       "lcov",
       "html",
