@@ -4,11 +4,11 @@
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
-    "test": "nyc mocha test/unit/**/*.spec.ts test/integration/**/*.spec.ts",
+    "test": "nyc mocha test/unit/**/*.spec.ts \"test/integration/**/*.spec.ts\"",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "unit-test": "nyc mocha test/unit/**/*.spec.ts",
-    "integration-test": "nyc mocha test/integration/**/*.spec.ts",
-    "system-test": "mocha test/system/**/*.spec.ts",
+    "integration-test": "nyc mocha \"test/integration/**/*.spec.ts\"",
+    "system-test": "mocha \"test/system/**/*.spec.ts\"",
     "lint": "tslint {source,test}/**/*.ts",
     "deploy": "serverless deploy"
   },
