@@ -4,7 +4,6 @@ import { Config } from '../../../config';
 import { CatalogServiceModel, TableOptions } from '../model/CatalogServiceModel';
 import createErrorResponse from './createErrorResponse';
 import * as semver from 'semver';
-import {Stage} from 'aws-sdk/clients/apigateway';
 
 export default class CatalogServiceController {
     private mapper: DataMapper;
@@ -126,72 +125,43 @@ export default class CatalogServiceController {
         }
     }
 
-    public async oldLookupByVersion(ServiceName, Version, ExternalId, StageName) {
-        try {
-            const matches = [];
-            const keyCondition = {ServiceName};
-            for await (const item of this.mapper.query(CatalogServiceModel,
-                keyCondition,
-                {indexName: 'ServiceNameIndex'})) {
-
-                let isMatch = false;
-
-                // Do an external Id (tenant-id) check here to see if this item should be returned.
-                if (ExternalId && item.ExternalID === ExternalId) {
-                    isMatch = true;
-                    // Do version check here to see id this item should be returned.
-                } else if (Version && item.Version === Version && !item.ExternalID) {
-                    isMatch = true;
-                    // Do stage check here to see id this item should be returned.
-                } else if (StageName && item.StageName === StageName && !item.ExternalID) {
-                    isMatch = true;
-                }
-
-                if (isMatch) {
-                    matches.push(item);
-                }
-                isMatch = false;
-            }
-        } catch (err) {
-            console.log(err.message);
-            return createErrorResponse(404, err.message);
-        }
-    }
-
-    public filterVersion(Version: string, ExternalId: string, StageName: string, candidates: CatalogServiceModel[]) {
+    public filterVersion(Version: string, ExternalID: string, StageName: string, candidates: CatalogServiceModel[]) {
         if (candidates.length < 1) {
             throw new Error('No service candidates provided');
         }
 
-        let externalIdFound = false;
-        let stageOverrideFound = false;
-        let chosenItem: CatalogServiceModel;
+        let filteredCandidates: CatalogServiceModel[];
 
-        for (const item of candidates) {
-            // if (ExternalId && ExternalId === item.ExternalID) {
-            //     externalIdFound = true;
-            // }
-            if (ExternalId) {
-                externalIdFound = ExternalId === item.ExternalID;
-            }
-            if (StageName) {
-                stageOverrideFound = StageName === item.StageName;
-            }
-            if (Version) {
-
-            }
-
-
+        // If we're looking for an ExternalID
+        if (ExternalID) {
+            filteredCandidates = candidates.filter((item) => item.ExternalID === ExternalID);
+        }
+        // Fallback to services not marked with any ExternalID
+        if (!filteredCandidates || filteredCandidates.length < 1) {
+            filteredCandidates = candidates.filter((item) => item.ExternalID === undefined);
         }
 
-        if (chosenItem === undefined) {
+        // Stages are unique environments and override versions.  A holdover from the old API.  Should be removed later.
+        if (StageName) {
+            filteredCandidates = filteredCandidates.filter((item) => item.StageName === StageName);
+        }
+
+        // At this point, all relevant items should filtered.  If picking by version, choose the latest that matches
+        if (Version) {
+            // Keep versions that satisfy the passed in Version.
+            filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
+            filteredCandidates.sort((a, b) => semver.lt(a, b) ? -1 : 1);
+        }
+
+        // Last item in filteredCandidates should have the latest version or only valid choice left.
+        if (filteredCandidates.length < 1) {
             throw new Error('Failed to find an appropriate service for provided requirements');
         }
 
-        return chosenItem;
+        return filteredCandidates.pop();
     }
 
-    public async lookupByVersion(ServiceName: string, Version: string, ExternalId: string, StageName: string) {
+    public async lookupByVersion(ServiceName: string, Version: string, ExternalID: string, StageName: string) {
         try {
             const candidates: CatalogServiceModel[] = [];
             const keyCondition = { ServiceName };
@@ -200,14 +170,8 @@ export default class CatalogServiceController {
                 candidates.push(item);
             }
 
-            const matches = [this.filterVersion(Version, ExternalId, StageName, candidates)];
-            if (matches.length > 0) {
-                return createSuccessResponse(JSON.stringify(matches));
-            } else {
-                const errMessage = 'Failed to find an appropriate service';
-                console.log(errMessage);
-                return createErrorResponse(404, 'Failed to find an appropriate service');
-            }
+            const matches = [this.filterVersion(Version, ExternalID, StageName, candidates)];
+            return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(404, err.message);
