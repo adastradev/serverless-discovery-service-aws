@@ -3,12 +3,13 @@ import { main as mainLookup } from '../../source/catalog/service-lookup';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 import * as util from 'util';
 import { createFixture, deleteFixture } from '../mocks/helper';
+import { tenantId1, tenantId2, tenantId3 } from '../mocks/mockData';
 
 const lookupService = util.promisify(mainLookup);
 
 const expect = chai.expect;
 
-describe.skip('service lookup by version or tenant id', () => {
+describe.only('service lookup by version or tenant id', () => {
 
     before(async () => {
         await createFixture();
@@ -19,7 +20,7 @@ describe.skip('service lookup by version or tenant id', () => {
     });
 
     describe('Scenario: Return the right URL for a given service name and stage name', () => {
-        it.skip(`WHEN a servcice name and stage name is passed to the API
+        it(`WHEN a servcice name and stage name is passed to the API
          THEN it should return the right URL`, async () => {
             const data = { queryStringParameters: { ServiceName: 'TestCourses', StageName: 'dev' }};
             const result = await lookupService(data, null);
@@ -30,14 +31,14 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestCourses');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL1');
+            devService.ServiceURL.should.be.equal('http://url1.test.com/dev');
         });
     });
     describe('Scenario: Return the right URL for a given service name and stage name and tenant ID', () => {
         it.skip(`WHEN a servcice name, stage name and tenant ID is passed to the API
         THEN it should return the right URL`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant2',
+                ExternalID: tenantId2,
                 ServiceName: 'TestCourses',
                 StageName: 'dev'
             }};
@@ -49,7 +50,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestCourses');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL14');
+            devService.ServiceURL.should.be.equal('http://url14.test.com/feat161');
         });
     });
     describe('Scenario: If there are multiple entries for a tenant, return the right URL', () => {
@@ -57,7 +58,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'dev'
             }};
@@ -69,7 +70,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL12');
+            devService.ServiceURL.should.be.equal('http://url12.test.com/feat201');
         });
     });
     describe('Scenario: Use semver to determine the highest version', () => {
@@ -77,7 +78,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'dev',
                 Version: '1'
@@ -90,7 +91,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL11');
+            devService.ServiceURL.should.be.equal('http://url11.test.com/feat112');
         });
     });
     describe('Scenario: Return the version that is specified', () => {
@@ -98,7 +99,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND the version is specific and available in the data
         THEN return the specified version`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'dev',
                 Version: '1.0.1'
@@ -111,7 +112,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL10');
+            devService.ServiceURL.should.be.equal('http://url10.test.com/feat101');
         });
     });
     describe('Scenario: Return the higher version URL if version specified doesn\'t exist', () => {
@@ -119,7 +120,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND specified version is not available BUT higher version is available
         THEN return the URL for the higher version`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'dev',
                 Version: '2.0.0'
@@ -132,7 +133,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL12');
+            devService.ServiceURL.should.be.equal('http://url12.test.com/feat201');
         });
     });
     describe('Scenario: Return the default URL if version doesn\'t exist', () => {
@@ -140,7 +141,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND specified or higher version is not available
         THEN return the default URL`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'dev',
                 Version: '3'
@@ -153,7 +154,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL4');
+            devService.ServiceURL.should.be.equal('http://url4.test.com/dev');
         });
     });
     describe('Scenario: Return the default URL when there is no entry for a tenant', () => {
@@ -161,7 +162,7 @@ describe.skip('service lookup by version or tenant id', () => {
         AND there is no entry for the tenant
         THEN return the default URL`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant3',
+                ExternalID: tenantId3,
                 ServiceName: 'TestTerm',
                 StageName: 'dev'
             }};
@@ -173,7 +174,7 @@ describe.skip('service lookup by version or tenant id', () => {
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestTerm');
             devService.StageName.should.be.equal('dev');
-            devService.ServiceURL.should.be.equal('URL14');
+            devService.ServiceURL.should.be.equal('http://url14.test.com/feat161');
         });
     });
     describe('Scenario: Should return the highest version available if given version is not present', () => {
@@ -191,7 +192,7 @@ describe.skip('service lookup by version or tenant id', () => {
 
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestCampus');
-            devService.ServiceURL.should.be.equal('URL17');
+            devService.ServiceURL.should.be.equal('http://url17.test.com/feat262');
         });
     });
     describe('Scenario: Throw error if invalid version is specified', () => {
@@ -210,7 +211,7 @@ describe.skip('service lookup by version or tenant id', () => {
         it.skip(` WHEN an invalid stage is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
-                ExternalID: 'Tenant1',
+                ExternalID: tenantId1,
                 ServiceName: 'TestTerm',
                 StageName: 'invalid_stage'
             }};
@@ -251,7 +252,7 @@ describe.skip('service lookup by version or tenant id', () => {
 
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestCampus');
-            devService.ServiceURL.should.be.equal('URL17');
+            devService.ServiceURL.should.be.equal('http://url17.test.com/feat262');
         });
     });
     describe('Scenario: Should be able to return a specific version if present', () => {
@@ -267,7 +268,7 @@ describe.skip('service lookup by version or tenant id', () => {
 
             const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
             devService.ServiceName.should.be.equal('TestCampus');
-            devService.ServiceURL.should.be.equal('URL16');
+            devService.ServiceURL.should.be.equal('http://url16.test.com/feat261');
         });
     });
 });

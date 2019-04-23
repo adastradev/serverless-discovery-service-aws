@@ -1,9 +1,8 @@
-import { mockData } from './mockData';
+import { mockData, tenantId1, tenantId2 } from './mockData';
 import CatalogServiceController from '../../source/catalog/controller/CatalogServiceController';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 
 const savedRecords: CatalogServiceModel[] = new Array<CatalogServiceModel>();
-
 /**
  * Create fixture data
  * @param services any additional services that you want to create for your specific fixture
