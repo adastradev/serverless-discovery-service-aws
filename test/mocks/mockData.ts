@@ -11,7 +11,7 @@ export const mockData: CatalogServiceModel[] = [
         CreatedAt: new Date(),
         ExternalID: undefined,
         ServiceID: uuid(),
-        ServiceName: 'TestCourses',
+        ServiceName: 'TestCourse',
         ServiceURL: 'http://url1.test.com/dev',
         StageName: 'dev',
         Version: undefined
@@ -20,7 +20,7 @@ export const mockData: CatalogServiceModel[] = [
         CreatedAt: new Date(),
         ExternalID: undefined,
         ServiceID: uuid(),
-        ServiceName: 'TestCourses',
+        ServiceName: 'TestCourse',
         ServiceURL: 'http://url2.test.com/staging',
         StageName: 'staging',
         Version: undefined
@@ -29,7 +29,7 @@ export const mockData: CatalogServiceModel[] = [
         CreatedAt: new Date(),
         ExternalID: undefined,
         ServiceID: uuid(),
-        ServiceName: 'TestCourses',
+        ServiceName: 'TestCourse',
         ServiceURL: 'http://url3.test.com/prod',
         StageName: 'prod',
         Version: undefined
