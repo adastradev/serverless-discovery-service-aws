@@ -144,5 +144,24 @@ export const mockData: CatalogServiceModel[] = [
         ServiceURL: 'http://url15.test.com/feat161',
         StageName: 'prod',
         Version: '1.6.1'
+    },
+    // version without stage name
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestCampus',
+        ServiceURL: 'http://url16.test.com/feat261',
+        StageName: undefined,
+        Version: '2.6.1'
+    },
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestCampus',
+        ServiceURL: 'http://url17.test.com/feat262',
+        StageName: undefined,
+        Version: '2.6.2'
     }
 ];

@@ -19,6 +19,8 @@ The file `./mockdata.ts` represents the different scenarios that are to be suppo
 | TestCourse  | dev       |Tenant1     |1.5.1    |URL13|
 | TestCourse  | dev       |Tenant2     |1.6.1    |URL14|
 | TestCourse  | prod      |Tenant2     |1.6.1    |URL15|
+| TestCampus  |           |            |2.6.1    |URL16|
+| TestCampus  |           |            |2.6.1    |URL17|
 
 As a user, I would like the discovery service to:
 
@@ -57,12 +59,28 @@ As a user, I would like the discovery service to:
 ## Scenario 5: Return the version that is specified
 
     WHEN a servcice name, stage name, tenant ID and version is passed to the API
-    AND the version is specific and available in the data
+    AND the specified version is available
     THEN return the specified version
     
 *Test case:* {TestTerm, dev, Tenant1, 1.0.1} => URL10
 
-## Scenario 6: Return the default URL when there is no entry for a tenant
+## Scenario 6: Return the higher version URL if version specified doesn't exist
+
+    WHEN a servcice name, stage name, tenant ID and version is passed to the API
+    AND specified version is not available BUT higher version is available
+    THEN return the URL for the higher version
+    
+*Test case:* {TestTerm, dev, Tenant1, 2.0.0} => URL12
+
+## Scenario 7: Return the default URL if version doesn't exist
+
+    WHEN a servcice name, stage name, tenant ID and version is passed to the API
+    AND specified or higher version is not available
+    THEN return the default URL
+    
+*Test case:* {TestTerm, dev, Tenant1, 3} => URL4
+
+## Scenario 8: Return the default URL when there is no entry for a tenant
 
     WHEN a servcice name, stage name and tenant ID is passed to the API
     AND there is no entry for the tenant
@@ -70,11 +88,82 @@ As a user, I would like the discovery service to:
     
 *Test case:* {TestTerm, dev, Tenant3} => URL4
 
-## Scenario 7: Throw an error if a invalid stage is provided
+## Scenario 9: Should return the highest version available if given version is not present
+
+    WHEN service name and specific version is provided to the API
+    AND the specific version is not available BUT a higher version is available
+    THEN it should return the highest available version
+    
+*Test case:* {TestCampus, 1} => URL17
+
+*Test case:* {TestCampus, 2} => URL17
+
+## Scenario 10: Throw error if invalid version is specified
+
+    WHEN service name and specific version is provided to the API
+    AND no higher version is available
+    THEN it should throw error
+    
+*Test case:* {TestCampus, 3} => **ERROR**
+
+*Test case:* {TestCampus, 3.2.1} => **ERROR**
+
+## Scenario 11: Throw an error if a invalid stage is provided
 
     WHEN an invalid stage is provided to the API
     THEN it should return a 404 error
     
-*Test case:* {TestTerm, invalid_stage, Tenant1} => <ERROR>
+*Test case:* {TestTerm, invalid_stage, Tenant1} => **ERROR**
 
-*Test case:* {TestTerm, invalid_stage} => <ERROR>
+*Test case:* {TestTerm, invalid_stage} => **ERROR**
+
+## Scenario 12: Throw an error if no stage name is provided
+
+    WHEN only service name is provided to the API
+    THEN it should return a 404 error
+    
+*Test case:* {TestTerm} => **ERROR**
+
+## Scenario 13: Throw an error if a invalid service name is provided
+
+    WHEN an invalid service name is provided to the API
+    THEN it should return a 404 error
+    
+*Test case:* {invalid_service, dev} => **ERROR**
+
+*Test case:* {invalid_service, dev, Tenant1} => **ERROR**
+
+## Scenario 14: Throw an error if a invalid service name is provided
+
+    WHEN an invalid service name is provided to the API
+    THEN it should return a 404 error
+    
+*Test case:* {invalid_service, dev} => **ERROR**
+
+*Test case:* {invalid_service, dev, Tenant1} => **ERROR**
+
+## Scenario 15: Throw an error if a invalid service name is provided
+
+    WHEN an invalid service name is provided to the API
+    THEN it should return a 404 error
+    
+*Test case:* {invalid_service, dev} => **ERROR**
+
+*Test case:* {invalid_service, dev, Tenant1} => **ERROR**
+
+## Scenario 16: Use semver to determine the version, when no stage is passed
+
+    WHEN service name and version is provided to the API
+    THEN it should return the url for the highest version
+    
+*Test case:* {TestCampus, 2} => URL17
+
+## Scenario 17: Should be able to return a specific version if present
+
+    WHEN service name and specific version is provided to the API
+    THEN it should return the url for the given version
+    
+*Test case:* {TestCampus, 2.6.1} => URL16
+
+
+
