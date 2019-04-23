@@ -133,32 +133,14 @@ As a user, I would like the discovery service to:
 
 *Test case:* {invalid_service, dev, Tenant1} => **ERROR**
 
-## Scenario 14: Throw an error if a invalid service name is provided
-
-    WHEN an invalid service name is provided to the API
-    THEN it should return a 404 error
-    
-*Test case:* {invalid_service, dev} => **ERROR**
-
-*Test case:* {invalid_service, dev, Tenant1} => **ERROR**
-
-## Scenario 15: Throw an error if a invalid service name is provided
-
-    WHEN an invalid service name is provided to the API
-    THEN it should return a 404 error
-    
-*Test case:* {invalid_service, dev} => **ERROR**
-
-*Test case:* {invalid_service, dev, Tenant1} => **ERROR**
-
-## Scenario 16: Use semver to determine the version, when no stage is passed
+## Scenario 14: Use semver to determine the version, when no stage is passed
 
     WHEN service name and version is provided to the API
     THEN it should return the url for the highest version
     
 *Test case:* {TestCampus, 2} => URL17
 
-## Scenario 17: Should be able to return a specific version if present
+## Scenario 15: Should be able to return a specific version if present
 
     WHEN service name and specific version is provided to the API
     THEN it should return the url for the given version
