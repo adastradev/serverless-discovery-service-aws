@@ -160,7 +160,7 @@ export default class CatalogServiceController {
         if (Version) {
             // Keep versions that satisfy the passed in Version.
             filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
-            filteredCandidates.sort((a, b) => semver.lt(a, b) ? -1 : 1);
+            filteredCandidates.sort((a, b) => semver.lt(a.Version, b.Version) ? -1 : 1);
         }
 
         // Last item in filteredCandidates should have the latest version or only valid choice left.
