@@ -1,4 +1,4 @@
-import uuid from 'uuidv4';
+import * as uuid from 'uuidv4';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 
 export const tenantId1 = uuid();
