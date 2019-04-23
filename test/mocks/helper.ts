@@ -2,8 +2,7 @@ import { mockData } from './mockData';
 import CatalogServiceController from '../../source/catalog/controller/CatalogServiceController';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 
-let additionalData: CatalogServiceModel[];
-let saveDefault: boolean;
+const savedRecords: CatalogServiceModel[] = new Array<CatalogServiceModel>();
 
 /**
  * Create fixture data
@@ -12,19 +11,24 @@ let saveDefault: boolean;
  */
 export const createFixture = async (services?: CatalogServiceModel[], createDefault: boolean = true) => {
     const controller = new CatalogServiceController();
-    saveDefault = createDefault;
+    console.log('Creating fixtures');
     // save default data
-    if (saveDefault) {
+    if (createDefault) {
         for (const data of mockData) {
-            await controller.create(data);
+            const toSave = Object.assign(new CatalogServiceModel(), data);
+            const response = await controller.create(toSave);
+            savedRecords.push(JSON.parse(response.body));
         }
+        console.log(`Created ${mockData.length} fixtures`);
     }
     // save additional data provided
     if (services) {
-        additionalData = [...services];
-        for (const data of additionalData) {
-            await controller.create(data);
+        for (const data of services) {
+            const toSave = Object.assign(new CatalogServiceModel(), data);
+            const response = await controller.create(toSave);
+            savedRecords.push(JSON.parse(response.body));
         }
+        console.log(`Created ${mockData.length} additional fixtures`);
     }
 };
 
@@ -33,16 +37,13 @@ export const createFixture = async (services?: CatalogServiceModel[], createDefa
  */
 export const deleteFixture = async () => {
     const controller = new CatalogServiceController();
-    // delete default fixture data if created
-    if (saveDefault) {
-        for (const data of mockData) {
-            await controller.delete(data);
+    console.log('Deleting fixtures');
+    // delete alll records that are saved
+    if (savedRecords.length > 0) {
+        for (const data of savedRecords) {
+            const toDelete = Object.assign(new CatalogServiceModel(), data);
+            await controller.delete(toDelete);
         }
-    }
-    // delete additional records provided to the create
-    if (additionalData) {
-        for (const data of additionalData) {
-            await controller.delete(data);
-        }
+        console.log(`Deleted ${savedRecords.length} fixtures`);
     }
 };
