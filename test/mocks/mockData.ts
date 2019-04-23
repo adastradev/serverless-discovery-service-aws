@@ -6,7 +6,7 @@ export const tenantId2 = uuid();
 export const tenantId3 = uuid();
 
 export const mockData: CatalogServiceModel[] = [
-    // TestCourse entries for different stages
+    // TestCourses entries for different stages
     {
         CreatedAt: new Date(),
         ExternalID: undefined,
@@ -122,25 +122,25 @@ export const mockData: CatalogServiceModel[] = [
         CreatedAt: new Date(),
         ExternalID: tenantId1,
         ServiceID: uuid(),
-        ServiceName: 'TestCourse',
+        ServiceName: 'TestCourses',
         ServiceURL: 'http://url13.test.com/feat151',
         StageName: 'dev',
         Version: '1.5.1'
     },
-    { // different versions for TestCourse
+    { // different versions for TestCourses
         CreatedAt: new Date(),
         ExternalID: tenantId2,
         ServiceID: uuid(),
-        ServiceName: 'TestCourse',
+        ServiceName: 'TestCourses',
         ServiceURL: 'http://url14.test.com/feat161',
         StageName: 'dev',
         Version: '1.6.1'
     },
-    { // different versions for TestCourse
+    { // different versions for TestCourses
         CreatedAt: new Date(),
         ExternalID: tenantId2,
         ServiceID: uuid(),
-        ServiceName: 'TestCourse',
+        ServiceName: 'TestCourses',
         ServiceURL: 'http://url15.test.com/feat161',
         StageName: 'prod',
         Version: '1.6.1'

@@ -48,8 +48,12 @@ export default class CatalogServiceController {
                 for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
                     { indexName: 'ServiceNameIndex' })) {
                     if (service.ExternalID === item.ExternalID) {
-                        existingService = item;
-                        break;
+                        if (service.Version ? service.Version === item.Version : true) {
+                            if (service.StageName ? service.StageName === item.StageName : true) {
+                                existingService = item;
+                                break;
+                            }
+                        }
                     }
                 }
             // If version is passed, find matching row assuming version specific logic is desired.
@@ -116,7 +120,13 @@ export default class CatalogServiceController {
             for await (const item of this.mapper.query(CatalogServiceModel,
                 keyCondition,
                 { indexName: 'ServiceNameIndex' })) {
-                matches.push(item);
+                // Filter out rows with version or external Id for this use case
+                if (!item.Version && !item.ExternalID) {
+                    matches.push(item);
+                }
+            }
+            if (matches.length < 1) {
+                throw new Error('Failed to find an appropriate service for provided requirements');
             }
             return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {

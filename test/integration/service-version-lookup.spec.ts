@@ -35,7 +35,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Return the right URL for a given service name and stage name and tenant ID', () => {
-        it.skip(`WHEN a servcice name, stage name and tenant ID is passed to the API
+        it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         THEN it should return the right URL`, async () => {
             const data = { queryStringParameters: {
                 ExternalID: tenantId2,
@@ -230,7 +230,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Throw an error if a invalid service name is provided', () => {
-        it.skip(`WHEN an invalid service name is provided to the API
+        it(`WHEN an invalid service name is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
                 ServiceName: 'invalid_service'
