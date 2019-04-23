@@ -41,7 +41,7 @@ describe('service-create', () => {
         newService.ServiceURL.should.be.equal('https://newServiceLocation');
     });
 
-    it('should return Success (created) for a new registration with External ID and Version', async () => {
+    it('should return Success (created) for a new registration with External ID', async () => {
         const data = require('./mocks/service-create-external-id');
         const result = await createService(data, null);
         expect(result.statusCode).to.be.equal(201); // Created
@@ -69,6 +69,34 @@ describe('service-create', () => {
         newService.ServiceName.should.be.equal('Discovery');
         newService.ServiceURL.should.be.equal('https://newServiceLocation');
         newService.Version.should.be.equal('new-version');
+    });
+
+    it('should return Success (created) for a new registration with Version', async () => {
+        const data = require('./mocks/service-create-version');
+        const result = await createService(data, null);
+        expect(result.statusCode).to.be.equal(201); // Created
+        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
+        ServiceID = newService.ServiceID;
+        newService.ServiceName.should.be.equal('Discovery');
+        newService.Version.should.be.equal('1.2.3.4');
+    });
+
+    it('should return Success (updated) for an existing registration with Version', async () => {
+        const event = require('./mocks/service-create-version');
+        const devData = {
+            ServiceName: 'Discovery',
+            ServiceURL: 'https://newServiceLocation',
+            StageName: 'version-specific',
+            Version: '1.2.3.4'
+        };
+        event.body = JSON.stringify(devData);
+        const result = await createService(event, null);
+        expect(result.statusCode).to.be.equal(200); // Ok
+        const newService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), JSON.parse(result.body));
+        ServiceID = newService.ServiceID;
+        newService.ServiceName.should.be.equal('Discovery');
+        newService.ServiceURL.should.be.equal('https://newServiceLocation');
+        newService.Version.should.be.equal('1.2.3.4');
     });
 
 });

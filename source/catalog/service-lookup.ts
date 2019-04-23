@@ -10,10 +10,11 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
         }
         const controller = new CatalogServiceController();
         let response;
-        if (event.queryStringParameters.Version || event.queryStringParameters.ExternalId) {
+        if (event.queryStringParameters.Version || event.queryStringParameters.ExternalID) {
             response = await controller.lookupByVersion(event.queryStringParameters.ServiceName,
                 event.queryStringParameters.Version || undefined,
-                event.queryStringParameters.ExternalId || undefined);
+                event.queryStringParameters.ExternalID || undefined,
+                event.queryStringParameters.StageName || undefined);
         } else {
             response = await controller.lookupByStage(event.queryStringParameters.ServiceName,
                 event.queryStringParameters.StageName || undefined);

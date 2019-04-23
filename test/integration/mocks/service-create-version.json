@@ -1,0 +1,5 @@
+{
+    "body": "{\"ServiceName\":\"Discovery\", \"StageName\": \"version-specific\", \"ServiceURL\": \"https://test\", \"Version\": \"1.2.3.4\" }",
+    "requestContext": {
+    }
+}

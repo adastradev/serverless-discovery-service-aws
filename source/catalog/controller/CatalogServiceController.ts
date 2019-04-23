@@ -39,28 +39,32 @@ export default class CatalogServiceController {
             await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
 
             let existingService;
+            const ServiceName = service.ServiceName;
 
-            // If external Id is passed, find matching row assuming version specific logic is desired.
+            // If external Id is passed, find matching row assuming tenant specific logic is desired.
             if (service.ExternalID) {
-                const keyCondition = { ServiceName: service.ServiceName, StageName: 'version-specific' };
+                const keyCondition = { ServiceName };
                 for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
                     { indexName: 'ServiceNameIndex' })) {
-
-                    let isMatch = false;
-                    if (service.ExternalID) {
-                        isMatch = service.ExternalID === item.ExternalID;
-                    }
-                    if (isMatch) {
+                    if (service.ExternalID === item.ExternalID) {
                         existingService = item;
                         break;
                     }
-                    isMatch = false;
                 }
+            // If version is passed, find matching row assuming version specific logic is desired.
+            } else if (service.Version) {
+                const keyCondition = { ServiceName };
+                for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
+                    { indexName: 'ServiceNameIndex' })) {
+                    if (service.Version === item.Version && !item.ExternalID) {
+                        existingService = item;
+                        break;
+                    }
+                }
+            // Look for existing services with the same name and stage (v1 functionality)
             } else if (service.ServiceName && service.StageName) {
-                // Look for existing services with the same name and stage
                 const keyCondition = { ServiceName: service.ServiceName, StageName: service.StageName };
-                const queryIterator = await this.mapper.query(CatalogServiceModel,
-                        keyCondition,
+                const queryIterator = await this.mapper.query(CatalogServiceModel, keyCondition,
                         { indexName: 'ServiceNameIndex' });
                 const queryResult = await queryIterator.next();
                 if (queryResult) {
@@ -120,7 +124,7 @@ export default class CatalogServiceController {
         }
     }
 
-    public async lookupByVersion(ServiceName, Version, ExternalId) {
+    public async lookupByVersion(ServiceName, Version, ExternalId, StageName) {
         try {
             const matches = [];
             const keyCondition = { ServiceName };
@@ -128,21 +132,23 @@ export default class CatalogServiceController {
                 keyCondition,
                 { indexName: 'ServiceNameIndex' })) {
 
-                    // TODO: do version check here to see id this item should be returned...
-                    /*
-                    if (Version) {
+                    let isMatch = false;
 
+                    // Do an external Id (tenant-id) check here to see if this item should be returned.
+                    if (ExternalId && item.ExternalID === ExternalId) {
+                        isMatch = true;
+                    // Do version check here to see id this item should be returned.
+                    } else if (Version && item.Version === Version  && !item.ExternalID) {
+                        isMatch = true;
+                    // Do stage check here to see id this item should be returned.
+                    } else if (StageName && item.StageName === StageName  && !item.ExternalID) {
+                        isMatch = true;
                     }
-                    */
 
-                    // TODO: do an external Id (tenant-id) check here to see if this item should be returned...
-                    /*
-                    if (ExternalId) {
-
+                    if (isMatch) {
+                        matches.push(item);
                     }
-                    */
-
-                    matches.push(item);
+                    isMatch = false;
             }
             return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {
