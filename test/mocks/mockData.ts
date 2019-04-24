@@ -105,18 +105,18 @@ export const mockData: CatalogServiceModel[] = [
         ExternalID: tenantId1,
         ServiceID: uuid(),
         ServiceName: 'TestTerm',
-        ServiceURL: 'http://url11.test.com/feat112',
+        ServiceURL: 'http://url12.test.com/feat201',
         StageName: 'dev',
-        Version: '1.1.2'
+        Version: '2.0.1'
     },
     {
         CreatedAt: new Date(),
         ExternalID: tenantId1,
         ServiceID: uuid(),
         ServiceName: 'TestTerm',
-        ServiceURL: 'http://url12.test.com/feat201',
+        ServiceURL: 'http://url11.test.com/feat112',
         StageName: 'dev',
-        Version: '2.0.1'
+        Version: '1.1.2'
     },
     {
         CreatedAt: new Date(),
@@ -163,5 +163,14 @@ export const mockData: CatalogServiceModel[] = [
         ServiceURL: 'http://url17.test.com/feat262',
         StageName: undefined,
         Version: '2.6.2'
+    },
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestTerm',
+        ServiceURL: 'http://url12.test.com/feat201',
+        StageName: undefined,
+        Version: '2.0.0'
     }
 ];

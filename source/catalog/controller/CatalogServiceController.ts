@@ -113,29 +113,7 @@ export default class CatalogServiceController {
         }
     }
 
-    public async lookupByStage(ServiceName, StageName = '') {
-        try {
-            const matches = [];
-            const keyCondition = StageName.length === 0 ? { ServiceName } : { ServiceName, StageName };
-            for await (const item of this.mapper.query(CatalogServiceModel,
-                keyCondition,
-                { indexName: 'ServiceNameIndex' })) {
-                // Filter out rows with version or external Id for this use case
-                if (!item.Version && !item.ExternalID) {
-                    matches.push(item);
-                }
-            }
-            if (matches.length < 1) {
-                throw new Error('Failed to find an appropriate service for provided requirements');
-            }
-            return createSuccessResponse(JSON.stringify(matches));
-        } catch (err) {
-            console.log(err.message);
-            return createErrorResponse(404, err.message);
-        }
-    }
-
-    public filterVersion(Version: string, ExternalID: string, StageName: string, candidates: CatalogServiceModel[]) {
+    public filterServices(Version: string, ExternalID: string, StageName: string, candidates: CatalogServiceModel[]) {
         if (candidates.length < 1) {
             throw new Error('No service candidates provided');
         }
@@ -160,8 +138,10 @@ export default class CatalogServiceController {
         if (Version) {
             // Keep versions that satisfy the passed in Version.
             filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
-            filteredCandidates.sort((a, b) => semver.lt(a.Version, b.Version) ? -1 : 1);
         }
+
+        // Sort any that are versioned
+        filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);
 
         // Last item in filteredCandidates should have the latest version or only valid choice left.
         if (filteredCandidates.length < 1) {
@@ -171,7 +151,7 @@ export default class CatalogServiceController {
         return filteredCandidates.pop();
     }
 
-    public async lookupByVersion(ServiceName: string, Version: string, ExternalID: string, StageName: string) {
+    public async lookupService(ServiceName: string, Version: string, ExternalID: string, StageName: string) {
         try {
             const candidates: CatalogServiceModel[] = [];
             const keyCondition = { ServiceName };
@@ -180,14 +160,13 @@ export default class CatalogServiceController {
                 candidates.push(item);
             }
 
-            const matches = [this.filterVersion(Version, ExternalID, StageName, candidates)];
+            const matches = [this.filterServices(Version, ExternalID, StageName, candidates)];
             return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {
             console.log(err.message);
             return createErrorResponse(404, err.message);
         }
     }
-
 }
 
 const createSuccessResponse = (message, statusCode = 200) => {

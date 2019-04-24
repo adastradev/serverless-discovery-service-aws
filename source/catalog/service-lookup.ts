@@ -9,16 +9,11 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
             return;
         }
         const controller = new CatalogServiceController();
-        let response;
-        if (event.queryStringParameters.Version || event.queryStringParameters.ExternalID) {
-            response = await controller.lookupByVersion(event.queryStringParameters.ServiceName,
-                event.queryStringParameters.Version || undefined,
-                event.queryStringParameters.ExternalID || undefined,
-                event.queryStringParameters.StageName || undefined);
-        } else {
-            response = await controller.lookupByStage(event.queryStringParameters.ServiceName,
-                event.queryStringParameters.StageName || undefined);
-            }
+        const params = event.queryStringParameters;
+        const response = await controller.lookupService(params.ServiceName,
+            params.Version || undefined,
+            params.ExternalID || undefined,
+            params.StageName || undefined);
         callback(null, response);
     } catch (Error) {
         console.log(Error.message);
