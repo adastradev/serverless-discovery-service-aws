@@ -18,6 +18,7 @@ pipelines:
             # Run unit/integration tests
             - npm install
             - npm run lint
+            - npm run unit-test
             - export TABLE_PREFIX=test-int-master-
             - . ./pipeline/run-integration-tests.sh
 
@@ -41,6 +42,7 @@ pipelines:
             # Run unit/integration tests
             - npm install
             - npm run lint
+            - npm run unit-test
             - export TABLE_PREFIX=test-int-${BRANCH_SLUG}-
             - . ./pipeline/run-integration-tests.sh
 
