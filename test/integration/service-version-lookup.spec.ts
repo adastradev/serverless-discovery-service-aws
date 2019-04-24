@@ -54,7 +54,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: If there are multiple entries for a tenant, return the right URL', () => {
-        it.skip(`WHEN a servcice name, stage name and tenant ID is passed to the API
+        it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
             const data = { queryStringParameters: {
@@ -74,7 +74,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Use semver to determine the highest version', () => {
-        it.skip(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
+        it(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
             const data = { queryStringParameters: {
@@ -95,7 +95,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Return the version that is specified', () => {
-        it.skip(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
+        it(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND the version is specific and available in the data
         THEN return the specified version`, async () => {
             const data = { queryStringParameters: {
@@ -116,7 +116,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Return the higher version URL if version specified doesn\'t exist', () => {
-        it.skip(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
+        it(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND specified version is not available BUT higher version is available
         THEN return the URL for the higher version`, async () => {
             const data = { queryStringParameters: {
@@ -137,7 +137,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Return the default URL if version doesn\'t exist', () => {
-        it.skip(` WHEN a servcice name, stage name, tenant ID and version is passed to the API
+        it(` WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND specified or higher version is not available
         THEN return the default URL`, async () => {
             const data = { queryStringParameters: {
@@ -158,7 +158,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Return the default URL when there is no entry for a tenant', () => {
-        it.skip(`WHEN a servcice name, stage name and tenant ID is passed to the API
+        it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         AND there is no entry for the tenant
         THEN return the default URL`, async () => {
             const data = { queryStringParameters: {
@@ -178,7 +178,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Should return the highest version available if given version is not present', () => {
-        it.skip(`WHEN service name and specific version is provided to the API
+        it(`WHEN service name and specific version is provided to the API
         AND the specific version is not available BUT a higher version is available
         THEN it should return the highest available version`, async () => {
             const data = { queryStringParameters: {
@@ -196,7 +196,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Throw error if invalid version is specified', () => {
-        it.skip(`WHEN service name and specific version is provided to the API
+        it(`WHEN service name and specific version is provided to the API
         AND no higher version is available
         THEN it should throw error`, async () => {
             const data = { queryStringParameters: {
@@ -208,7 +208,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Throw an error if a invalid stage is provided', () => {
-        it.skip(` WHEN an invalid stage is provided to the API
+        it(` WHEN an invalid stage is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
                 ExternalID: tenantId1,
@@ -220,7 +220,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Throw an error if no stage name is provided', () => {
-        it.skip(`WHEN only service name is provided to the API
+        it(`WHEN only service name is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
                 ServiceName: 'TestTerm'
@@ -240,7 +240,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Use semver to determine the version, when no stage is passed', () => {
-        it.skip(`WHEN service name and version is provided to the API
+        it(`WHEN service name and version is provided to the API
         THEN it should return the url for the highest version`, async () => {
             const data = { queryStringParameters: {
                 ServiceName: 'TestCampus',
@@ -256,7 +256,7 @@ describe.only('service lookup by version or tenant id', () => {
         });
     });
     describe('Scenario: Should be able to return a specific version if present', () => {
-        it.skip(`WHEN service name and specific version is provided to the API
+        it(`WHEN service name and specific version is provided to the API
         THEN it should return the url for the given version`, async () => {
             const data = { queryStringParameters: {
                 ServiceName: 'TestCampus',
