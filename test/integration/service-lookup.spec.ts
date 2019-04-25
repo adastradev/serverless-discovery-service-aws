@@ -20,7 +20,7 @@ describe('service-lookup', () => {
     let ServiceIDByExternalId = null;
     let ServiceIDByVersion = null;
     const externalTestId = '95a575de-9afe-4ef9-93e9-d17654ef149f';
-    const testVersionNumber = '1.2.3.4';
+    const testVersionNumber = '1.2.3';
 
     before(async () => {
         const event = require('./mocks/service-empty-body');
@@ -67,22 +67,18 @@ describe('service-lookup', () => {
         await deleteService({ pathParameters: { id: ServiceIDByVersion } }, null);
     });
 
-    it('should return Success and an array of results when looking up a service by name', async () => {
+    it(`should return Success and a single non-stage result with the highest version
+        when looking up a service by name only`, async () => {
         const data = { queryStringParameters: { ServiceName: 'Discovery' }};
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);
-        expect(servicesJSON.length).to.be.equal(4);
+        expect(servicesJSON.length).to.be.equal(1);
 
-        const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
-        devService.ServiceName.should.be.equal('Discovery');
-        devService.StageName.should.be.equal('dev');
-        devService.ServiceID.should.be.equal(ServiceIDDev);
-
-        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[1]);
+        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
         prodService.ServiceName.should.be.equal('Discovery');
-        prodService.StageName.should.be.equal('prod');
-        prodService.ServiceID.should.be.equal(ServiceIDProd);
+        prodService.Version.should.be.equal(testVersionNumber);
+        prodService.ServiceID.should.be.equal(ServiceIDByVersion);
     });
 
     it('should return Success and a single result when looking up a service by name and stage', async () => {

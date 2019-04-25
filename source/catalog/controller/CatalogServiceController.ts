@@ -44,11 +44,6 @@ export default class CatalogServiceController {
             let existingService;
             const ServiceName = service.ServiceName;
 
-            // if no stage is passed to create, default a value
-            if (!service.StageName) {
-                service.StageName = NOSTAGE;
-            }
-
             // If external Id is passed, find matching row assuming tenant specific logic is desired.
             if (service.ExternalID) {
                 const keyCondition = { ServiceName };
@@ -82,6 +77,11 @@ export default class CatalogServiceController {
                 if (queryResult) {
                     existingService = queryResult.value;
                 }
+            }
+
+            // if no stage is passed to create, default a value
+            if (!service.StageName) {
+                service.StageName = NOSTAGE;
             }
 
             if (existingService) {
@@ -146,8 +146,6 @@ export default class CatalogServiceController {
             // Keep versions that satisfy the passed in Version.
             filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
         }
-        filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);
-
         // Sort any that are versioned
         filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);
 
@@ -166,7 +164,8 @@ export default class CatalogServiceController {
             for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
                 { indexName: 'ServiceNameIndex' })) {
 
-                // set stage name to undefined if this entry is NOSTAGE from dynamo
+                // Set stage name to undefined if this entry is NOSTAGE from dynamo.
+                //
                 // StageName is required to have a value in dynamo to have the record
                 // returned using the ServiceNameIndex because StageName is part of the index
                 // definition.

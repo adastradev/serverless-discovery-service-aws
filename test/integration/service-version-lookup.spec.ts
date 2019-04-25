@@ -9,7 +9,7 @@ const lookupService = util.promisify(mainLookup);
 
 const expect = chai.expect;
 
-describe.only('service lookup by version or tenant id', () => {
+describe('service lookup by version or tenant id', () => {
 
     before(async () => {
         await createFixture();
@@ -19,7 +19,7 @@ describe.only('service lookup by version or tenant id', () => {
         await deleteFixture();
     });
 
-    describe('Scenario: Return the right URL for a given service name and stage name', () => {
+    describe('Scenario 1: Return the right URL for a given service name and stage name', () => {
         it(`WHEN a servcice name and stage name is passed to the API
          THEN it should return the right URL`, async () => {
             const data = { queryStringParameters: { ServiceName: 'TestCourse', StageName: 'dev' }};
@@ -34,7 +34,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url1.test.com/dev');
         });
     });
-    describe('Scenario: Return the right URL for a given service name and stage name and tenant ID', () => {
+    describe('Scenario 2: Return the right URL for a given service name and stage name and tenant ID', () => {
         it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         THEN it should return the right URL`, async () => {
             const data = { queryStringParameters: {
@@ -53,7 +53,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url14.test.com/feat161');
         });
     });
-    describe('Scenario: If there are multiple entries for a tenant, return the right URL', () => {
+    describe('Scenario 3: If there are multiple entries for a tenant, return the right URL', () => {
         it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
@@ -73,7 +73,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url12.test.com/feat201');
         });
     });
-    describe('Scenario: Use semver to determine the highest version', () => {
+    describe('Scenario 4: Use semver to determine the highest version', () => {
         it(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND there are multiple versions available for the tenant
         THEN it should return the URL for the highest version`, async () => {
@@ -94,7 +94,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url11.test.com/feat112');
         });
     });
-    describe('Scenario: Return the version that is specified', () => {
+    describe('Scenario 5: Return the version that is specified', () => {
         it(`WHEN a servcice name, stage name, tenant ID and version is passed to the API
         AND the version is specific and available in the data
         THEN return the specified version`, async () => {
@@ -115,7 +115,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url10.test.com/feat101');
         });
     });
-    describe('Scenario: Return the default URL when there is no entry for a tenant', () => {
+    describe('Scenario 6: Return the default URL when there is no entry for a tenant', () => {
         it(`WHEN a servcice name, stage name and tenant ID is passed to the API
         AND there is no entry for the tenant
         THEN return the default URL`, async () => {
@@ -135,7 +135,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url4.test.com/dev');
         });
     });
-    describe('Scenario: Throw error if invalid version is specified', () => {
+    describe('Scenario 7: Throw error if invalid version is specified', () => {
         it(`WHEN service name and specific version is provided to the API
         AND no higher version is available
         THEN it should throw error`, async () => {
@@ -147,7 +147,7 @@ describe.only('service lookup by version or tenant id', () => {
             expect(result.statusCode).to.be.equal(404);
         });
     });
-    describe('Scenario: Throw an error if a invalid stage is provided', () => {
+    describe('Scenario 8: Throw an error if a invalid stage is provided', () => {
         it(` WHEN an invalid stage is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
@@ -159,17 +159,22 @@ describe.only('service lookup by version or tenant id', () => {
             expect(result.statusCode).to.be.equal(404);
         });
     });
-    describe('Scenario: Throw an error if no stage name is provided', () => {
+    describe('Scenario 9: If only service name is provided, return latest non-stage version available', () => {
         it(`WHEN only service name is provided to the API
-        THEN it should return a 404 error`, async () => {
+        THEN it should provide highest non-stage, non-tenant version`, async () => {
             const data = { queryStringParameters: {
                 ServiceName: 'TestTerm'
             }};
             const result = await lookupService(data, null);
-            expect(result.statusCode).to.be.equal(404);
+            const servicesJSON = JSON.parse(result.body);
+            expect(servicesJSON.length).to.be.equal(1);
+
+            const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+            devService.ServiceName.should.be.equal('TestTerm');
+            devService.ServiceURL.should.be.equal('http://url18.test.com/feat201');
         });
     });
-    describe('Scenario: Throw an error if a invalid service name is provided', () => {
+    describe('Scenario 10: Throw an error if a invalid service name is provided', () => {
         it(`WHEN an invalid service name is provided to the API
         THEN it should return a 404 error`, async () => {
             const data = { queryStringParameters: {
@@ -179,7 +184,7 @@ describe.only('service lookup by version or tenant id', () => {
             expect(result.statusCode).to.be.equal(404);
         });
     });
-    describe('Scenario: Use semver to determine the version, when no stage is passed', () => {
+    describe('Scenario 11: Use semver to determine the version, when no stage is passed', () => {
         it(`WHEN service name and version is provided to the API
         THEN it should return the url for the highest version`, async () => {
             const data = { queryStringParameters: {
@@ -195,7 +200,7 @@ describe.only('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url17.test.com/feat262');
         });
     });
-    describe('Scenario: Should be able to return a specific version if present', () => {
+    describe('Scenario 12: Should be able to return a specific version if present', () => {
         it(`WHEN service name and specific version is provided to the API
         THEN it should return the url for the given version`, async () => {
             const data = { queryStringParameters: {
