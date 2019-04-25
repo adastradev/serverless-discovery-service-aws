@@ -5,6 +5,8 @@ import { CatalogServiceModel, TableOptions } from '../model/CatalogServiceModel'
 import createErrorResponse from './createErrorResponse';
 import * as semver from 'semver';
 
+const NOSTAGE = 'NOSTAGE';
+
 export default class CatalogServiceController {
     private mapper: DataMapper;
 
@@ -41,6 +43,11 @@ export default class CatalogServiceController {
 
             let existingService;
             const ServiceName = service.ServiceName;
+
+            // if no stage is passed to create, default a value
+            if (!service.StageName) {
+                service.StageName = NOSTAGE;
+            }
 
             // If external Id is passed, find matching row assuming tenant specific logic is desired.
             if (service.ExternalID) {
@@ -160,8 +167,8 @@ export default class CatalogServiceController {
         if (Version) {
             // Keep versions that satisfy the passed in Version.
             filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
-            filteredCandidates.sort((a, b) => semver.lt(a.Version, b.Version) ? -1 : 1);
         }
+        filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);
 
         // Last item in filteredCandidates should have the latest version or only valid choice left.
         if (filteredCandidates.length < 1) {
@@ -177,6 +184,15 @@ export default class CatalogServiceController {
             const keyCondition = { ServiceName };
             for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
                 { indexName: 'ServiceNameIndex' })) {
+
+                // set stage name to undefined if this entry is NOSTAGE from dynamo
+                // StageName is required to have a value in dynamo to have the record
+                // returned using the ServiceNameIndex because StageName is part of the index
+                // definition.
+                //
+                if (item.StageName === NOSTAGE) {
+                    item.StageName = undefined;
+                }
                 candidates.push(item);
             }
 

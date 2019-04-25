@@ -42,7 +42,6 @@ describe('service-lookup', () => {
             ExternalID: externalTestId,
             ServiceName: 'Discovery',
             ServiceURL: 'https://test',
-            StageName: 'version-specific',
             Version: testVersionNumber
         };
         event.body = JSON.stringify(externalIdData);
@@ -53,7 +52,6 @@ describe('service-lookup', () => {
         const byVersionData = {
             ServiceName: 'Discovery',
             ServiceURL: 'https://test',
-            StageName: 'version-specific',
             Version: testVersionNumber
         };
         event.body = JSON.stringify(byVersionData);

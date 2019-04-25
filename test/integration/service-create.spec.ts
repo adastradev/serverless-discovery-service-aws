@@ -58,7 +58,6 @@ describe('service-create', () => {
             ExternalID: '95a575de-9afe-4ef9-93e9-d17654ef149f',
             ServiceName: 'Discovery',
             ServiceURL: 'https://newServiceLocation',
-            StageName: 'version-specific',
             Version: 'new-version'
         };
         event.body = JSON.stringify(devData);
@@ -86,7 +85,6 @@ describe('service-create', () => {
         const devData = {
             ServiceName: 'Discovery',
             ServiceURL: 'https://newServiceLocation',
-            StageName: 'version-specific',
             Version: '1.2.3.4'
         };
         event.body = JSON.stringify(devData);
