@@ -169,7 +169,7 @@ export const mockData: CatalogServiceModel[] = [
         ExternalID: undefined,
         ServiceID: uuid(),
         ServiceName: 'TestTerm',
-        ServiceURL: 'http://url12.test.com/feat201',
+        ServiceURL: 'http://url18.test.com/feat201',
         StageName: undefined,
         Version: '2.0.0'
     }

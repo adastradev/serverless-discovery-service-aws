@@ -76,7 +76,7 @@ describe('CatalogServiceController', () => {
     describe('Scenario 9', () => {
         it('Test 1', () => {
             const result = controller.filterServices(undefined, undefined, undefined, testTerm);
-            expect(result.ServiceURL).equals('http://url12.test.com/feat201');
+            expect(result.ServiceURL).equals('http://url18.test.com/feat201');
         });
     });
 
