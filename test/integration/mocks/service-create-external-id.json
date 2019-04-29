@@ -1,0 +1,5 @@
+{
+    "body": "{\"ServiceName\":\"Discovery\", \"StageName\": \"NOSTAGE\", \"ExternalID\": \"95a575de-9afe-4ef9-93e9-d17654ef149f\", \"ServiceURL\": \"https://test\", \"Version\": \"1.5.4.9\" }",
+    "requestContext": {
+    }
+}

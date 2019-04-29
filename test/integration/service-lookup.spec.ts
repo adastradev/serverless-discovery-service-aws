@@ -17,11 +17,15 @@ const should = chai.should();
 describe('service-lookup', () => {
     let ServiceIDDev = null;
     let ServiceIDProd = null;
+    let ServiceIDByExternalId = null;
+    let ServiceIDByVersion = null;
+    const externalTestId = '95a575de-9afe-4ef9-93e9-d17654ef149f';
+    const testVersionNumber = '1.2.3';
 
     before(async () => {
         const event = require('./mocks/service-empty-body');
 
-        // create two services with different stages
+        // create four services with different stages
         const devData = { ServiceName: 'Discovery', StageName: 'dev', ServiceURL: 'https://test' };
         event.body = JSON.stringify(devData);
         const resultDev = await createService(event, null);
@@ -33,29 +37,48 @@ describe('service-lookup', () => {
         const resultProd = await createService(event, null);
         const responseJsonProd = JSON.parse(resultProd.body);
         ServiceIDProd = responseJsonProd.ServiceID;
+
+        const externalIdData = {
+            ExternalID: externalTestId,
+            ServiceName: 'Discovery',
+            ServiceURL: 'https://test',
+            Version: testVersionNumber
+        };
+        event.body = JSON.stringify(externalIdData);
+        const resultByExternalId = await createService(event, null);
+        const responseJsonByExternalId = JSON.parse(resultByExternalId.body);
+        ServiceIDByExternalId = responseJsonByExternalId.ServiceID;
+
+        const byVersionData = {
+            ServiceName: 'Discovery',
+            ServiceURL: 'https://test',
+            Version: testVersionNumber
+        };
+        event.body = JSON.stringify(byVersionData);
+        const resultByVersion = await createService(event, null);
+        const responseJsonByVersion = JSON.parse(resultByVersion.body);
+        ServiceIDByVersion = responseJsonByVersion.ServiceID;
     });
 
     after(async () => {
         await deleteService({ pathParameters: { id: ServiceIDDev } }, null);
         await deleteService({ pathParameters: { id: ServiceIDProd } }, null);
+        await deleteService({ pathParameters: { id: ServiceIDByExternalId } }, null);
+        await deleteService({ pathParameters: { id: ServiceIDByVersion } }, null);
     });
 
-    it('should return Success and an array of results when looking up a service by name', async () => {
+    it(`should return Success and a single non-stage result with the highest version
+        when looking up a service by name only`, async () => {
         const data = { queryStringParameters: { ServiceName: 'Discovery' }};
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);
-        expect(servicesJSON.length).to.be.equal(2);
+        expect(servicesJSON.length).to.be.equal(1);
 
-        const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
-        devService.ServiceName.should.be.equal('Discovery');
-        devService.StageName.should.be.equal('dev');
-        devService.ServiceID.should.be.equal(ServiceIDDev);
-
-        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[1]);
+        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
         prodService.ServiceName.should.be.equal('Discovery');
-        prodService.StageName.should.be.equal('prod');
-        prodService.ServiceID.should.be.equal(ServiceIDProd);
+        prodService.Version.should.be.equal(testVersionNumber);
+        prodService.ServiceID.should.be.equal(ServiceIDByVersion);
     });
 
     it('should return Success and a single result when looking up a service by name and stage', async () => {
@@ -69,5 +92,36 @@ describe('service-lookup', () => {
         prodService.ServiceName.should.be.equal('Discovery');
         prodService.StageName.should.be.equal('prod');
         prodService.ServiceID.should.be.equal(ServiceIDProd);
+    });
+
+    it('should return Success and a single result when looking up a service by name and external id', async () => {
+        const data = { queryStringParameters: {
+            ExternalID: externalTestId,
+            ServiceName: 'Discovery'
+        }};
+        const result = await lookupService(data, null);
+        expect(result.statusCode).to.be.equal(200);
+        const servicesJSON = JSON.parse(result.body);
+        expect(servicesJSON.length).to.be.equal(1);
+
+        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+        prodService.ServiceName.should.be.equal('Discovery');
+        prodService.Version.should.be.equal(testVersionNumber);
+        prodService.ServiceID.should.be.equal(ServiceIDByExternalId);
+    });
+
+    it('should return Success and a single result when looking up a service by name and version', async () => {
+        const data = { queryStringParameters: {
+            ServiceName: 'Discovery',
+            Version: testVersionNumber }};
+        const result = await lookupService(data, null);
+        expect(result.statusCode).to.be.equal(200);
+        const servicesJSON = JSON.parse(result.body);
+        expect(servicesJSON.length).to.be.equal(1);
+
+        const prodService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+        prodService.ServiceName.should.be.equal('Discovery');
+        prodService.Version.should.be.equal(testVersionNumber);
+        prodService.ServiceID.should.be.equal(ServiceIDByVersion);
     });
 });

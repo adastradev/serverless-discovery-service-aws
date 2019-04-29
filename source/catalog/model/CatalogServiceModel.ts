@@ -25,10 +25,16 @@ export class CatalogServiceModel {
             ServiceNameIndex: 'RANGE'
         }
     })
-    public StageName: string;
+    public StageName?: string;
 
     @attribute()
     public ServiceURL: string;
+
+    @attribute()
+    public ExternalID?: string;
+
+    @attribute()
+    public Version?: string;
 }
 
 export function TableOptions() {
