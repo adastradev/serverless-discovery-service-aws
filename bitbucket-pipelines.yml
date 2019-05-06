@@ -11,6 +11,21 @@ pipelines:
     master:
       - step:
           script:
+
+            #################
+            # Deploy to dev
+            #################
+
+            - export BRANCH_SLUG=dev
+            - npm install
+            - export STAGE_NAME=$BRANCH_SLUG
+            - TABLE_PREFIX=${BRANCH_SLUG}-
+            - . ./pipeline/deploy-service.sh
+
+            #################
+            # Deploy to prod
+            #################
+
             # Override with production AWS credentials for the master branch
             - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD
             - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
