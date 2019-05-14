@@ -97,4 +97,19 @@ describe('CatalogServiceController', () => {
             expect(result.ServiceURL).equals('http://url16.test.com/feat261');
         });
     });
+
+    describe('Scenario 13', () => {
+        it('Explicitly looking for a beta version', () => {
+            const result = controller.filterServices('1-2-3-beta', undefined, undefined, testCourse);
+            expect(result.ServiceURL).equals('http://url1.test.com/1-2-3-beta');
+        });
+        it('Explicitly looking for a beta version', () => {
+            const result = controller.filterServices('2-3-4-beta', undefined, undefined, testCourse);
+            expect(result.ServiceURL).equals('http://url2.test.com/2-3-4-beta');
+        });
+        it('Explicitly looking for a beta version', () => {
+            const result = controller.filterServices('3-4-5-beta', undefined, undefined, testCourse);
+            expect(result.ServiceURL).equals('http://url3.test.com/3-4-5-beta');
+        });
+    });
 });
