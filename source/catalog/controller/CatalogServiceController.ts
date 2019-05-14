@@ -144,7 +144,9 @@ export default class CatalogServiceController {
         // At this point, all relevant items should filtered.  If picking by version, choose the latest that matches
         if (Version) {
             // Keep versions that satisfy the passed in Version.
-            filteredCandidates = filteredCandidates.filter((item) => semver.satisfies(item.Version, Version));
+            filteredCandidates = filteredCandidates.filter((item) =>
+                (semver.valid(Version) && semver.valid(item.Version) && semver.eq(item.Version, Version))
+                || semver.satisfies(item.Version, Version));
         }
         // Sort any that are versioned
         filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);

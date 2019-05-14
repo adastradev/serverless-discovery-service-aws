@@ -1,6 +1,6 @@
 {
   "name": "@adastradev/serverless-discovery-service-aws",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "semver": "^6.0.0"
   },
   "devDependencies": {
-    "@adastradev/serverless-discovery-sdk": "0.0.7",
+    "@adastradev/serverless-discovery-sdk": "^1.0.0",
     "@types/aws-lambda": "8.10.1",
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
@@ -48,8 +48,8 @@
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
-    "serverless": "^1.41.1",
     "nyc": "^14.0.0",
+    "serverless": "^1.41.1",
     "serverless-discovery-plugin": "^0.3.1",
     "serverless-webpack": "^5.1.1",
     "source-map-support": "^0.5.7",

@@ -6,6 +6,34 @@ export const tenantId2 = uuid();
 export const tenantId3 = uuid();
 
 export const mockData: CatalogServiceModel[] = [
+    // TestCourse entries for different pre-release versions
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestCourse',
+        ServiceURL: 'http://url1.test.com/1-2-3-beta',
+        StageName: undefined,
+        Version: '1.2.3-beta'
+    },
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestCourse',
+        ServiceURL: 'http://url2.test.com/2-3-4-test-branch',
+        StageName: undefined,
+        Version: '2.3.4-test-branch'
+    },
+    {
+        CreatedAt: new Date(),
+        ExternalID: undefined,
+        ServiceID: uuid(),
+        ServiceName: 'TestCourse',
+        ServiceURL: 'http://url3.test.com/3-4-5-beta',
+        StageName: undefined,
+        Version: '3.4.5-beta'
+    },
     // TestCourse entries for different stages
     {
         CreatedAt: new Date(),
