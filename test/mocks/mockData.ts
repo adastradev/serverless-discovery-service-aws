@@ -6,7 +6,7 @@ export const tenantId2 = uuid();
 export const tenantId3 = uuid();
 
 export const mockData: CatalogServiceModel[] = [
-    // TestCourse entries for different stages
+    // TestCourse entries for different pre-release versions
     {
         CreatedAt: new Date(),
         ExternalID: undefined,
