@@ -44,7 +44,7 @@ export default class CatalogServiceController {
             let existingService;
             const ServiceName = service.ServiceName;
 
-            console.log(`Creating service: ${service}`);
+            console.log(`Creating service: ${JSON.stringify(service)}`);
 
             // If external Id is passed, find matching row assuming tenant specific logic is desired.
             if (service.ExternalID) {
@@ -55,7 +55,8 @@ export default class CatalogServiceController {
                         if (service.Version ? service.Version === item.Version : true) {
                             if (service.StageName ? service.StageName === item.StageName : true) {
                                 existingService = item;
-                                console.log(`Found existing service for given externalID: ${existingService}`);
+                                console.log(`Found existing service for given externalID:
+                                            ${JSON.stringify(existingService)}`);
                                 break;
                             }
                         }
@@ -68,7 +69,7 @@ export default class CatalogServiceController {
                     { indexName: 'ServiceNameIndex' })) {
                     if (service.Version === item.Version && !item.ExternalID) {
                         existingService = item;
-                        console.log(`Found service matching given version: ${existingService}`);
+                        console.log(`Found service matching given version: ${JSON.stringify(existingService)}`);
                         break;
                     }
                 }
@@ -79,7 +80,7 @@ export default class CatalogServiceController {
                         { indexName: 'ServiceNameIndex' });
                 const queryResult = await queryIterator.next();
                 if (queryResult) {
-                    console.log(`Found service matching given name/stage: ${existingService}`);
+                    console.log(`Found service matching given name/stage: ${JSON.stringify(queryResult.value)}`);
                     existingService = queryResult.value;
                 }
             }
@@ -92,8 +93,9 @@ export default class CatalogServiceController {
 
             if (existingService) {
                 // TODO: should we consider making this an error condition instead?
-                console.log(`Setting new service URL: \n` +
-                            `OLD: ${existingService.ServiceURL}\nNEW: ${service.ServiceURL}`);
+                console.log(`Setting new service URL:
+                            OLD: ${existingService.ServiceURL}
+                            NEW: ${service.ServiceURL}`);
                 existingService.ServiceURL = service.ServiceURL;
                 existingService.Version = service.Version;
                 const updatedService = await this.mapper.update(existingService);
