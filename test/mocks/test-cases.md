@@ -121,5 +121,6 @@ As a user, I would like the discovery service to:
     
 *Test case:* {TestCampus, 2.6.1} => URL16
 
-
-
+## Scenario 13: Do not allow pre-release in non-version lookups
+    WHEN only the service name is provided
+    THEN do not allow pre-release versions
