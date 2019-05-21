@@ -112,4 +112,11 @@ describe('CatalogServiceController', () => {
             expect(result.ServiceURL).equals('http://url3.test.com/3-4-5-beta');
         });
     });
+
+    describe('pre-release filtering', () => {
+        it('Do not allow pre-release in non-version lookups', () => {
+            const result = controller.filterServices(undefined, undefined, undefined, testTerm);
+            expect(result.ServiceURL).not.equals('http://url19.test.com/feat210-staged');
+        });
+    });
 });

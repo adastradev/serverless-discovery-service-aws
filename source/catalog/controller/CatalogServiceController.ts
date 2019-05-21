@@ -162,6 +162,10 @@ export default class CatalogServiceController {
             filteredCandidates = filteredCandidates.filter((item) =>
                 (semver.valid(Version) && semver.valid(item.Version) && semver.eq(item.Version, Version))
                 || semver.satisfies(item.Version, Version));
+        } else {
+            // Remove entries containing a pre-release version
+            filteredCandidates = filteredCandidates.filter(
+                (item) => !item.Version || semver.satisfies(item.Version, 'x'));
         }
         // Sort any that are versioned
         filteredCandidates.sort((a, b) => semver.lt(a.Version || '0.0.0', b.Version || '0.0.0') ? -1 : 1);
