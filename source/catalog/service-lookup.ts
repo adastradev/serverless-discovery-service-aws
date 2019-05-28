@@ -52,5 +52,5 @@ export const isRangedVersion = (version) => {
 };
 
 export const isPrereleaseVersion = (version) => {
-    return version.indexOf('-') >= 0 ? true : false
-}
+    return version.indexOf('-') >= 0 ? true : false;
+};
