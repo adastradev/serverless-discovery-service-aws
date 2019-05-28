@@ -23,7 +23,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
                 params.StageName || undefined);
 
             // Take found prod version, add the postfix
-            const foundVersion = JSON.parse(intermediateResponse.body)[0].Version
+            const foundVersion = JSON.parse(intermediateResponse.body)[0].Version;
             const postfix = params.Version.split('-').slice(1);
             const newVersion = `${foundVersion}-${postfix}`;
 
@@ -49,4 +49,4 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
 export const isRangedVersion = (version) => {
     const regex = /[xX]/g;
     return regex.test(version);
-}
+};
