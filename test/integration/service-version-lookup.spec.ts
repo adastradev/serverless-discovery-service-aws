@@ -245,5 +245,19 @@ describe('service lookup by version or tenant id', () => {
             devService2.ServiceName.should.be.equal('StagingTest');
             devService2.ServiceURL.should.be.equal('http://url22.com/3-7-9-staging');
         });
+        it(`WHEN service name and ranged NON-staging version is provided to the API
+        THEN it should return the url for the correct version`, async () => {
+            const data = { queryStringParameters: {
+                ServiceName: 'StagingTest',
+                Version: '3.x'
+            }};
+            const result = await lookupService(data, null);
+            const servicesJSON = JSON.parse(result.body);
+            expect(servicesJSON.length).to.be.equal(1);
+
+            const devService2: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+            devService2.ServiceName.should.be.equal('StagingTest');
+            devService2.ServiceURL.should.be.equal('http://url21.com/3-7-9');
+        });
     });
 });

@@ -12,7 +12,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
         const params = event.queryStringParameters;
         let response;
 
-        if (params.Version && isRangedVersion(params.Version)) {
+        if (params.Version && isRangedVersion(params.Version) && isPrereleaseVersion(params.Version)) {
             // If a ranged version is passed with a prerelease tag,
             // it will find the latest compatible released version,
             // then circle back and request that version with the given
@@ -50,3 +50,7 @@ export const isRangedVersion = (version) => {
     const regex = /[xX]/g;
     return regex.test(version);
 };
+
+export const isPrereleaseVersion = (version) => {
+    return version.split('-')[1] ? true : false
+}
