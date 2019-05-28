@@ -4,7 +4,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 # image: atlassian/default-image:latest
-image: node:8.9.4
+image: node:10
 
 pipelines:
   branches:
@@ -68,6 +68,7 @@ pipelines:
             - dynamodblocal
 definitions: 
   services: 
-    dynamodblocal: 
+    dynamodblocal:
+      memory: 2048
       image: dwmkerr/dynamodb 
 

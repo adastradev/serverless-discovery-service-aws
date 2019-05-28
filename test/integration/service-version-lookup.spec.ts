@@ -216,4 +216,34 @@ describe('service lookup by version or tenant id', () => {
             devService.ServiceURL.should.be.equal('http://url16.test.com/feat261');
         });
     });
+    describe('Scenario 13: Should be able to return a staging version from ranged request', () => {
+        it(`WHEN service name and ranged staging version is provided to the API
+        THEN it should return the url for the given version`, async () => {
+            const data = { queryStringParameters: {
+                ServiceName: 'StagingTest',
+                Version: '5.x.x-staging'
+            }};
+            const result = await lookupService(data, null);
+            const servicesJSON = JSON.parse(result.body);
+            expect(servicesJSON.length).to.be.equal(1);
+
+            const devService: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+            devService.ServiceName.should.be.equal('StagingTest');
+            devService.ServiceURL.should.be.equal('http://url21.com/5-0-0-staging');
+        });
+        it(`WHEN service name and ranged staging version is provided to the API
+        THEN it should return the url for the given version`, async () => {
+            const data = { queryStringParameters: {
+                ServiceName: 'StagingTest',
+                Version: '3.x-staging'
+            }};
+            const result = await lookupService(data, null);
+            const servicesJSON = JSON.parse(result.body);
+            expect(servicesJSON.length).to.be.equal(1);
+
+            const devService2: CatalogServiceModel = Object.assign(new CatalogServiceModel(), servicesJSON[0]);
+            devService2.ServiceName.should.be.equal('StagingTest');
+            devService2.ServiceURL.should.be.equal('http://url22.com/3-7-9-staging');
+        });
+    });
 });

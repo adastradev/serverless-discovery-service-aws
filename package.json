@@ -1,6 +1,6 @@
 {
   "name": "@adastradev/serverless-discovery-service-aws",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
