@@ -254,5 +254,5 @@ export const mockData: CatalogServiceModel[] = [
         ServiceURL: 'http://url22.com/4-0-0-feattest',
         StageName: undefined,
         Version: '4.0.0-feattest'
-    },
+    }
 ];
