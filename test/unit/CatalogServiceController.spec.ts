@@ -111,6 +111,10 @@ describe('CatalogServiceController', () => {
             const result = controller.filterServices('3.4.5-beta', undefined, undefined, testCourse);
             expect(result.ServiceURL).equals('http://url3.test.com/3-4-5-beta');
         });
+        it('Explicitly looking for a beta version that doesnt have corresponding prod version', () => {
+            const result = controller.filterServices('4.0.0-feattest', undefined, undefined, testCourse);
+            expect(result.ServiceURL).equals('http://url22.com/4-0-0-feattest');
+        });
     });
 
     describe('pre-release filtering', () => {

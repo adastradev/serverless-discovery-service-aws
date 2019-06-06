@@ -12,7 +12,10 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
         const params = event.queryStringParameters;
         let response;
 
-        if (params.Version && isRangedVersion(params.Version) && isPrereleaseVersion(params.Version)) {
+        if (params.Version &&
+            isRangedVersion(params.Version)
+            && isPrereleaseVersion(params.Version)
+            && params.Version.indexOf('staging') !== -1) {
             // If a ranged version is passed with a prerelease tag,
             // it will find the latest compatible released version,
             // then circle back and request that version with the given
