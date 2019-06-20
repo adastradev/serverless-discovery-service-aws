@@ -1,3 +1,4 @@
+import Log from '@adastradev/astra-logger';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Config } from '../../../config';
@@ -12,7 +13,7 @@ export default class CatalogServiceController {
 
     constructor() {
         this.mapper = new DataMapper({
-            client: new DynamoDB({region: Config.aws_region, endpoint: Config.dynamo_endpoint || null }),
+            client: new DynamoDB({ region: Config.aws_region, endpoint: Config.dynamo_endpoint || null }),
             tableNamePrefix: Config.table_prefix
         });
     }
@@ -22,7 +23,7 @@ export default class CatalogServiceController {
             await this.mapper.ensureTableExists(CatalogServiceModel, TableOptions());
             return createSuccessResponse('Tables provisioned successfully', 200);
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(err.statusCode, err.message);
         }
     }
@@ -32,7 +33,7 @@ export default class CatalogServiceController {
             await this.mapper.deleteTable(CatalogServiceModel);
             return createSuccessResponse('Tables de-provisioned successfully', 200);
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(err.statusCode, err.message);
         }
     }
@@ -44,7 +45,7 @@ export default class CatalogServiceController {
             let existingService;
             const ServiceName = service.ServiceName;
 
-            console.log(`Creating service: ${JSON.stringify(service)}`);
+            Log.info('Creating service:', service);
 
             // If external Id is passed, find matching row assuming tenant specific logic is desired.
             if (service.ExternalID) {
@@ -55,52 +56,51 @@ export default class CatalogServiceController {
                         if (service.Version ? service.Version === item.Version : true) {
                             if (service.StageName ? service.StageName === item.StageName : true) {
                                 existingService = item;
-                                console.log(`Found existing service for given externalID:
-                                            ${JSON.stringify(existingService)}`);
+                                Log.info('Found existing service for given externalID:', existingService);
                                 break;
                             }
                         }
                     }
                 }
-            // If version is passed, find matching row assuming version specific logic is desired.
+                // If version is passed, find matching row assuming version specific logic is desired.
             } else if (service.Version) {
                 const keyCondition = { ServiceName };
                 for await (const item of this.mapper.query(CatalogServiceModel, keyCondition,
                     { indexName: 'ServiceNameIndex' })) {
                     if (service.Version === item.Version && !item.ExternalID) {
                         existingService = item;
-                        console.log(`Found service matching given version: ${JSON.stringify(existingService)}`);
+                        Log.info('Found service matching given version:', existingService);
                         break;
                     }
                 }
-            // Look for existing services with the same name and stage (v1 functionality)
+                // Look for existing services with the same name and stage (v1 functionality)
             } else if (service.ServiceName && service.StageName) {
                 const keyCondition = { ServiceName: service.ServiceName, StageName: service.StageName };
                 const queryIterator = await this.mapper.query(CatalogServiceModel, keyCondition,
-                        { indexName: 'ServiceNameIndex' });
+                    { indexName: 'ServiceNameIndex' });
                 const queryResult = await queryIterator.next();
                 if (queryResult) {
-                    console.log(`Found service matching given name/stage: ${JSON.stringify(queryResult.value)}`);
+                    Log.info('Found service matching given name/stage:', queryResult.value);
                     existingService = queryResult.value;
                 }
             }
 
             // if no stage is passed to create, default a value
             if (!service.StageName) {
-                console.log(`No stage was passed - defaulting to ${NOSTAGE}`);
+                Log.debug(`No stage was passed - defaulting to ${NOSTAGE}`);
                 service.StageName = NOSTAGE;
             }
 
             if (existingService) {
                 // TODO: should we consider making this an error condition instead?
-                console.log(`Setting new service URL:
+                Log.info(`Setting new service URL:
                             OLD: ${existingService.ServiceURL}
                             NEW: ${service.ServiceURL}`);
                 existingService.ServiceURL = service.ServiceURL;
                 existingService.Version = service.Version;
                 const updatedService = await this.mapper.update(existingService);
 
-                console.log(`Updated service: ${updatedService}`);
+                Log.info('Updated service:', updatedService);
 
                 return createSuccessResponse(JSON.stringify(updatedService), 200);
             } else {
@@ -108,18 +108,18 @@ export default class CatalogServiceController {
                 return createSuccessResponse(JSON.stringify(newService), 201);
             }
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(err.statusCode, err.message);
         }
     }
 
     public async delete(service: CatalogServiceModel) {
         try {
-            console.log(`Deleting service: ${service}`);
+            Log.info('Deleting service:', service);
             await this.mapper.delete(service);
             return createSuccessResponse('', 204);
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(err.statusCode, err.message);
         }
     }
@@ -127,10 +127,10 @@ export default class CatalogServiceController {
     public async get(service: CatalogServiceModel) {
         try {
             const foundService = await this.mapper.get(service);
-            console.log(`Found service: ${foundService}`);
+            Log.info('Found service:', foundService);
             return createSuccessResponse(JSON.stringify(foundService));
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(404, err.message);
         }
     }
@@ -197,10 +197,13 @@ export default class CatalogServiceController {
                 candidates.push(item);
             }
 
+            Log.debug('Candidates: ', candidates);
+
             const matches = [this.filterServices(Version, ExternalID, StageName, candidates)];
+            Log.debug('Matched candidates: ', matches);
             return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {
-            console.log(err.message);
+            Log.error(err.message, err.stack);
             return createErrorResponse(404, err.message);
         }
     }

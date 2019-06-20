@@ -1,15 +1,18 @@
+import Log from '@adastradev/astra-logger';
 import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
 import CatalogServiceController from './controller/CatalogServiceController';
 import createErrorResponse from './controller/createErrorResponse';
 
 export const main: Handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
     try {
+        Log.config({ tenant_id: 'Discovery Service' });
         if (event.queryStringParameters.ServiceName === undefined) {
             callback(null, createErrorResponse(400, 'Bad request'));
             return;
         }
         const controller = new CatalogServiceController();
         const params = event.queryStringParameters;
+        Log.debug('service-lookup with params', params);
         let response;
 
         if (params.Version &&
@@ -44,7 +47,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
 
         callback(null, response);
     } catch (Error) {
-        console.log(Error.message);
+        Log.error(Error.message, Error.stack);
         callback(null, createErrorResponse(501, Error.message));
     }
 };
