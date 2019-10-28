@@ -17,7 +17,8 @@ pipelines:
             #################
 
             - export BRANCH_SLUG=dev
-            - npm install
+            - npm ci
+            - npm run secure
             - export STAGE_NAME=$BRANCH_SLUG
             - TABLE_PREFIX=${BRANCH_SLUG}-
             - . ./pipeline/deploy-service.sh
@@ -31,7 +32,7 @@ pipelines:
             - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
 
             # Run unit/integration tests
-            - npm install
+            - npm ci
             - npm run lint
             - export TABLE_PREFIX=test-int-master-
             - . ./pipeline/run-integration-tests.sh
@@ -54,7 +55,8 @@ pipelines:
             - export BRANCH_SLUG=${BITBUCKET_BRANCH#feature/} && BRANCH_SLUG=${BRANCH_SLUG#KOB-} && BRANCH_SLUG=${BRANCH_SLUG//-/} && BRANCH_SLUG=feat${BRANCH_SLUG:0:8}
 
             # Run unit/integration tests
-            - npm install
+            - npm ci
+            - npm run secure
             - npm run lint
             - export TABLE_PREFIX=test-int-${BRANCH_SLUG}-
             - . ./pipeline/run-integration-tests.sh
