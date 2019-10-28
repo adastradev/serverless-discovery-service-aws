@@ -33,6 +33,7 @@ pipelines:
 
             # Run unit/integration tests
             - npm ci
+            - npm run secure
             - npm run lint
             - export TABLE_PREFIX=test-int-master-
             - . ./pipeline/run-integration-tests.sh
