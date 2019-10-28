@@ -1,6 +1,6 @@
 {
   "name": "@adastradev/serverless-discovery-service-aws",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "integration-test": "nyc mocha \"test/integration/**/*.spec.ts\"",
     "system-test": "mocha \"test/system/**/*.spec.ts\"",
     "lint": "tslint {source,test}/**/*.ts",
-    "deploy": "serverless deploy"
+    "deploy": "serverless deploy",
+    "secure": "gulp secure"
   },
   "nyc": {
     "extension": [
@@ -48,6 +49,8 @@
     "aws-api-gateway-client": "^0.2.16",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
+    "gulp": "^4.0.2",
+    "gulp-snyk": "^0.1.1",
     "mocha": "^5.2.0",
     "nyc": "^14.0.0",
     "serverless": "^1.41.1",
@@ -57,6 +60,7 @@
     "ts-loader": "^4.2.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
+    "tslint-config-security": "^1.16.0",
     "typescript": "^2.8.1",
     "util": "^0.11.0",
     "uuidv4": "^4.0.0",
