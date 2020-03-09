@@ -197,10 +197,10 @@ export default class CatalogServiceController {
                 candidates.push(item);
             }
 
-            Log.debug('Candidates: ', candidates);
+            Log.trace('Candidates: ', candidates);
 
             const matches = [this.filterServices(Version, ExternalID, StageName, candidates)];
-            Log.debug('Matched candidates: ', matches);
+            Log.trace('Matched candidates: ', matches);
             return createSuccessResponse(JSON.stringify(matches));
         } catch (err) {
             Log.error(err.message, err.stack);

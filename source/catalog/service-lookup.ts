@@ -12,7 +12,7 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
         }
         const controller = new CatalogServiceController();
         const params = event.queryStringParameters;
-        Log.debug('service-lookup with params', params);
+        Log.trace('service-lookup with params', params);
         let response;
 
         if (params.Version &&
