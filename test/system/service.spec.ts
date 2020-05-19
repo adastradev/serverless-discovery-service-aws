@@ -33,7 +33,7 @@ describe('Catalog Service API', () => {
             expect(response.status).to.equal(200);
             expect(response.data.ServiceName).to.equal(service.ServiceName);
             expect(response.data.ServiceID).to.equal(newService.ServiceID);
-        });
+        }).timeout(5000);
 
         it('should get a service by Name', async () => {
             const response = await discoveryApi.lookupService('SystemTest');
@@ -41,7 +41,7 @@ describe('Catalog Service API', () => {
             expect(response.data.length).to.equal(1);
             expect(response.data[0].ServiceName).to.equal(service.ServiceName);
             expect(response.data[0].ServiceID).to.equal(newService.ServiceID);
-        });
+        }).timeout(5000);
 
         it('should get a service by Name and Stage', async () => {
             const response = await discoveryApi.lookupService('SystemTest', 'dev');
