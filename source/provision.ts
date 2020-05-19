@@ -1,7 +1,7 @@
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import CatalogServiceController from './catalog/controller/CatalogServiceController';
 import createErrorResponse from './catalog/controller/createErrorResponse';
-import { AsyncApiHandler, ApiResponse, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
+import { AsyncApiHandler, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
 
 export const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context) => {
     try {
