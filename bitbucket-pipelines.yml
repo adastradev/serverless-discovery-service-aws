@@ -10,6 +10,7 @@ pipelines:
   branches:
     master:
       - step:
+          size: 2x
           script:
 
             #################
@@ -52,6 +53,7 @@ pipelines:
             - dynamodblocal
     feature/*:
       - step:
+          size: 2x
           script:
             - export BRANCH_SLUG=${BITBUCKET_BRANCH#feature/} && BRANCH_SLUG=${BRANCH_SLUG#KOB-} && BRANCH_SLUG=${BRANCH_SLUG//-/} && BRANCH_SLUG=feat${BRANCH_SLUG:0:8}
 
