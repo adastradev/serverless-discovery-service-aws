@@ -6,7 +6,7 @@ import { createFixture, deleteFixture } from '../mocks/helper';
 import { tenantId1, tenantId2, tenantId3 } from '../mocks/mockData';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const lookupService = util.promisify(mainLookup);
+const lookupService = mainLookup;
 
 const expect = chai.expect;
 
