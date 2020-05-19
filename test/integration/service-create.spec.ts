@@ -2,11 +2,10 @@ import * as chai from 'chai';
 import { main as mainCreate } from '../../source/catalog/service-create';
 import { main as mainDelete } from '../../source/catalog/service-delete';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
-import * as util from 'util';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const createService = util.promisify(mainCreate);
-const deleteService = util.promisify(mainDelete);
+const createService = mainCreate;
+const deleteService = mainDelete;
 
 const expect = chai.expect;
 

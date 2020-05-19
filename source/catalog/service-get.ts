@@ -3,7 +3,7 @@ import { APIGatewayEvent, Context } from 'aws-lambda';
 import { CatalogServiceModel } from './model/CatalogServiceModel';
 import CatalogServiceController from './controller/CatalogServiceController';
 import createErrorResponse from './controller/createErrorResponse';
-import { AsyncApiHandler, withEventDecode } from '@adastradev/astra-aws-sdk';
+import { AsyncApiHandler, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
 
 const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context) => {
     try {
@@ -18,4 +18,4 @@ const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context
     }
 };
 
-export const main = withEventDecode(handler);
+export const main = withEventDecodeAsync(handler);

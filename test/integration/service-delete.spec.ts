@@ -5,11 +5,10 @@ import { main as mainCreate } from '../../source/catalog/service-create';
 import { main as mainGet } from '../../source/catalog/service-get';
 import { main as mainDelete } from '../../source/catalog/service-delete';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
-import * as util from 'util';
 
-const createService = util.promisify(mainCreate);
-const getService = util.promisify(mainGet);
-const deleteService = util.promisify(mainDelete);
+const createService = mainCreate;
+const getService = mainGet;
+const deleteService = mainDelete;
 
 const expect = chai.expect;
 const should = chai.should();

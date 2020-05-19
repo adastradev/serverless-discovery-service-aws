@@ -2,7 +2,7 @@ import Log from '@adastradev/astra-logger';
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import CatalogServiceController from './controller/CatalogServiceController';
 import createErrorResponse from './controller/createErrorResponse';
-import { AsyncApiHandler, withEventDecode } from '@adastradev/astra-aws-sdk';
+import { AsyncApiHandler, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
 
 const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context) => {
     try {
@@ -61,4 +61,4 @@ export const isPrereleaseVersion = (version) => {
     return version.indexOf('-') >= 0 ? true : false;
 };
 
-export const main = withEventDecode(handler);
+export const main = withEventDecodeAsync(handler);
