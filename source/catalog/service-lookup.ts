@@ -1,14 +1,14 @@
 import Log from '@adastradev/astra-logger';
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Context } from 'aws-lambda';
 import CatalogServiceController from './controller/CatalogServiceController';
 import createErrorResponse from './controller/createErrorResponse';
+import { AsyncApiHandler, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
 
-export const main: Handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
+const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context) => {
     try {
         Log.config({ tenant_id: 'Discovery Service' });
         if (event.queryStringParameters.ServiceName === undefined) {
-            callback(null, createErrorResponse(400, 'Bad request'));
-            return;
+            return createErrorResponse(400, 'Bad request');
         }
         const controller = new CatalogServiceController();
         const params = event.queryStringParameters;
@@ -45,10 +45,10 @@ export const main: Handler = async (event: APIGatewayEvent, context: Context, ca
                 params.StageName || undefined);
         }
 
-        callback(null, response);
+        return response;
     } catch (Error) {
         Log.error(Error.message, Error.stack);
-        callback(null, createErrorResponse(501, Error.message));
+        return createErrorResponse(501, Error.message);
     }
 };
 
@@ -60,3 +60,5 @@ export const isRangedVersion = (version) => {
 export const isPrereleaseVersion = (version) => {
     return version.indexOf('-') >= 0 ? true : false;
 };
+
+export const main = withEventDecodeAsync(handler);
