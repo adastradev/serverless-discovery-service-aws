@@ -1,4 +1,4 @@
-import { APIGatewayEvent, Callback, Context, Handler, APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
 import { main as mainCreate } from '../../source/catalog/service-create';
