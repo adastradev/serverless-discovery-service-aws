@@ -1,4 +1,4 @@
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Callback, Context, Handler, APIGatewayProxyEvent } from 'aws-lambda';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
 import { main as mainCreate } from '../../source/catalog/service-create';
@@ -61,15 +61,21 @@ describe('service-lookup', () => {
     });
 
     after(async () => {
-        await deleteService({ pathParameters: { id: ServiceIDDev } }, null);
-        await deleteService({ pathParameters: { id: ServiceIDProd } }, null);
-        await deleteService({ pathParameters: { id: ServiceIDByExternalId } }, null);
-        await deleteService({ pathParameters: { id: ServiceIDByVersion } }, null);
+        const data = {} as APIGatewayProxyEvent;
+        data.pathParameters = { id: ServiceIDDev };
+        await deleteService(data, null);
+        data.pathParameters = { id: ServiceIDProd };
+        await deleteService(data, null);
+        data.pathParameters = { id: ServiceIDByExternalId };
+        await deleteService(data, null);
+        data.pathParameters = { id: ServiceIDByVersion };
+        await deleteService(data, null);
     });
 
     it(`should return Success and a single non-stage result with the highest version
         when looking up a service by name only`, async () => {
-        const data = { queryStringParameters: { ServiceName: 'Discovery' }};
+        const data = {} as APIGatewayProxyEvent;
+        data.queryStringParameters = { ServiceName: 'Discovery' };
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);
@@ -82,7 +88,8 @@ describe('service-lookup', () => {
     });
 
     it('should return Success and a single result when looking up a service by name and stage', async () => {
-        const data = { queryStringParameters: { ServiceName: 'Discovery', StageName: 'prod' }};
+        const data = {} as APIGatewayProxyEvent;
+        data.queryStringParameters = { ServiceName: 'Discovery', StageName: 'prod' };
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);
@@ -95,10 +102,11 @@ describe('service-lookup', () => {
     });
 
     it('should return Success and a single result when looking up a service by name and external id', async () => {
-        const data = { queryStringParameters: {
+        const data = {} as APIGatewayProxyEvent;
+        data.queryStringParameters = {
             ExternalID: externalTestId,
             ServiceName: 'Discovery'
-        }};
+        };
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);
@@ -111,9 +119,10 @@ describe('service-lookup', () => {
     });
 
     it('should return Success and a single result when looking up a service by name and version', async () => {
-        const data = { queryStringParameters: {
+        const data = {} as APIGatewayProxyEvent;
+        data.queryStringParameters = {
             ServiceName: 'Discovery',
-            Version: testVersionNumber }};
+            Version: testVersionNumber };
         const result = await lookupService(data, null);
         expect(result.statusCode).to.be.equal(200);
         const servicesJSON = JSON.parse(result.body);

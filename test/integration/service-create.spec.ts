@@ -3,6 +3,7 @@ import { main as mainCreate } from '../../source/catalog/service-create';
 import { main as mainDelete } from '../../source/catalog/service-delete';
 import { CatalogServiceModel } from '../../source/catalog/model/CatalogServiceModel';
 import * as util from 'util';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
 const createService = util.promisify(mainCreate);
 const deleteService = util.promisify(mainDelete);
@@ -15,7 +16,8 @@ describe('service-create', () => {
     after(async () => {
 
         ServiceIDs.forEach(async (ServiceID) => {
-            const data = { pathParameters: { id: ServiceID }};
+            const data = {} as APIGatewayProxyEvent;
+            data.pathParameters = { id: ServiceID };
             await deleteService(data, null);
         });
     });

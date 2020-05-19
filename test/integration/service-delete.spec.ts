@@ -1,4 +1,4 @@
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Callback, Context, Handler, APIGatewayProxyEvent } from 'aws-lambda';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
 import { main as mainCreate } from '../../source/catalog/service-create';
@@ -25,12 +25,14 @@ describe('service-delete', () => {
     });
 
     after(async () => {
-        const data = { pathParameters: { id: ServiceID }};
+        const data = {} as APIGatewayProxyEvent;
+        data.pathParameters = { id: ServiceID };
         const result = await deleteService(data, null);
     });
 
     it('should return Success when deleting an extant service', async () => {
-        const data = { pathParameters: { id: ServiceID }};
+        const data = {} as APIGatewayProxyEvent;
+        data.pathParameters = { id: ServiceID };
         const result = await deleteService(data, null);
         expect(result.statusCode).to.be.equal(204);
 

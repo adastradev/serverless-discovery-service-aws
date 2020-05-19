@@ -1,17 +1,17 @@
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Context } from 'aws-lambda';
 import CatalogServiceController from './catalog/controller/CatalogServiceController';
 import createErrorResponse from './catalog/controller/createErrorResponse';
-import { withEventDecode } from '@adastradev/astra-aws-sdk';
+import { AsyncApiHandler, withEventDecodeAsync } from '@adastradev/astra-aws-sdk';
 
-export const handler: Handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
+export const handler: AsyncApiHandler = async (event: APIGatewayEvent, context: Context) => {
     try {
         const controller = new CatalogServiceController();
         const response = await controller.deprovisionTables();
-        callback(null, response);
+        return response;
     } catch (Error) {
         console.log(Error.message);
-        callback(null, createErrorResponse(501, Error.message));
+        return createErrorResponse(501, Error.message);
     }
 };
 
-export const main = withEventDecode(handler);
+export const main = withEventDecodeAsync(handler);
