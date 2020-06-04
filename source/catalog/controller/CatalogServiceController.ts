@@ -104,6 +104,11 @@ export default class CatalogServiceController {
 
                 return createSuccessResponse(JSON.stringify(updatedService), 200);
             } else {
+                if (service.Version && !this.versionIsSemverValid(service.Version)) {
+                    const errMsg = 'Provided version is not semver compliant: ' + service.Version;
+                    Log.error(errMsg);
+                    return createErrorResponse(422, errMsg);
+                }
                 const newService = await this.mapper.put(service);
                 return createSuccessResponse(JSON.stringify(newService), 201);
             }
@@ -111,6 +116,10 @@ export default class CatalogServiceController {
             Log.error(err.message, err.stack);
             return createErrorResponse(err.statusCode, err.message);
         }
+    }
+
+    public versionIsSemverValid(version: string): boolean {
+        return version && semver.valid(version) != null;
     }
 
     public async delete(service: CatalogServiceModel) {
