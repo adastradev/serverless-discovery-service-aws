@@ -104,7 +104,7 @@ export default class CatalogServiceController {
 
                 return createSuccessResponse(JSON.stringify(updatedService), 200);
             } else {
-                if (!this.versionIsSemverValid(service.Version)) {
+                if (service.Version && !this.versionIsSemverValid(service.Version)) {
                     const errMsg = 'Provided version is not semver compliant: ' + service.Version;
                     Log.error(errMsg);
                     return createErrorResponse(422, errMsg);
