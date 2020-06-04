@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import CatalogServiceController from '../../source/catalog/controller/CatalogServiceController';
 import {mockData, tenantId1, tenantId2, tenantId3} from '../mocks/mockData';
+import {CatalogServiceModel} from '../../source/catalog/model/CatalogServiceModel';
 
 const expect = chai.expect;
 
@@ -117,10 +118,24 @@ describe('CatalogServiceController', () => {
         });
     });
 
-    describe('pre-release filtering', () => {
+    describe('Non-conforming input', () => {
         it('Do not allow pre-release in non-version lookups', () => {
             const result = controller.filterServices(undefined, undefined, undefined, testTerm);
             expect(result.ServiceURL).not.equals('http://url19.test.com/feat210-staged');
+        });
+
+        it('Do not allow non-semver compliant version', () => {
+            const validVersion = '1.2.3';
+            let result = controller.versionIsSemverValid(validVersion);
+            expect(result).equals(true);
+
+            let invalidVersion = '0';
+            result = controller.versionIsSemverValid(invalidVersion);
+            expect(result).equals(false);
+
+            invalidVersion = '1.2';
+            result = controller.versionIsSemverValid(invalidVersion);
+            expect(result).equals(false);
         });
     });
 });
