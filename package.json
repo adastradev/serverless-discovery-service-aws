@@ -38,12 +38,12 @@
     "@adastradev/astra-logger": "^1.3.0",
     "@aws/dynamodb-data-mapper": "^0.7.2",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.2",
-    "aws-sdk": "^2.688.0",
+    "aws-sdk": "^2.689.0",
     "semver": "^6.3.0"
   },
   "devDependencies": {
-    "@adastradev/serverless-discovery-sdk": "^2.1.1",
-    "@types/aws-lambda": "^8.10.52",
+    "@adastradev/serverless-discovery-sdk": "^1.1.2",
+    "@types/aws-lambda": "^8.10.53",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.7",
     "@types/node": "^8.10.61",
