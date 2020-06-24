@@ -36,7 +36,7 @@
     "@aws/dynamodb-data-mapper": "^0.7.2",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.2",
     "aws-sdk": "^2.282.1",
-    "semver": "^6.0.0"
+    "semver": "^6.3.0"
   },
   "devDependencies": {
     "@adastradev/serverless-discovery-sdk": "^1.0.0",
