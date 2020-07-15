@@ -1,7 +1,8 @@
 # serverless-discovery-service-aws
 
+[![codecov](https://codecov.io/bb/adastradev/serverless-discovery-service-aws/branch/master/graph/badge.svg?token=3azVybsbRc)](https://codecov.io/bb/adastradev/serverless-discovery-service-aws)
+
 [![GitHub license](https://img.shields.io/github/license/adastradev/serverless-discovery-service-aws.svg)](https://github.com/adastradev/serverless-discovery-service-aws/blob/master/LICENSE.md)
-[![Coverage Status](https://coveralls.io/repos/github/adastradev/serverless-discovery-service-aws/badge.svg?branch=master)](https://coveralls.io/github/adastradev/serverless-discovery-service-aws?branch=master)
 
 *The last serverless micro-service you'll ever wonder how to find*
 
